@@ -139,9 +139,9 @@ public class OVRGrabber : MonoBehaviour
 	// the held object will see an incorrect velocity (because the move will occur over the time of the
 	// physics tick, not the render tick), and will respond to the incorrect velocity with potentially
 	// visible artifacts.
-    virtual public void Update()
+    virtual public void FixedUpdate()
     {
-		if (m_operatingWithoutOVRCameraRig)
+        if (m_operatingWithoutOVRCameraRig)
         {
 		    OnUpdatedAnchors();
         }
@@ -172,7 +172,9 @@ public class OVRGrabber : MonoBehaviour
 		float prevFlex = m_prevFlex;
 		// Update values from inputs
 		m_prevFlex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
-
+        if (Input.GetKey(KeyCode.Mouse0))
+            m_prevFlex = 0x04;
+        //Debug.Log(m_prevFlex.ToString() + " " + prevFlex.ToString());
 		CheckForGrabOrRelease(prevFlex);
     }
 
@@ -223,6 +225,7 @@ public class OVRGrabber : MonoBehaviour
     {
         if ((m_prevFlex >= grabBegin) && (prevFlex < grabBegin))
         {
+            //Debug.Log("g");
             GrabBegin();
         }
         else if ((m_prevFlex <= grabEnd) && (prevFlex > grabEnd))
