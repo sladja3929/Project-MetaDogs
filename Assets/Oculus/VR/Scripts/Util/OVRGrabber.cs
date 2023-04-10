@@ -172,7 +172,7 @@ public class OVRGrabber : MonoBehaviour
 		float prevFlex = m_prevFlex;
 		// Update values from inputs
 		m_prevFlex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.G))
             m_prevFlex = 0x04;
         //Debug.Log(m_prevFlex.ToString() + " " + prevFlex.ToString());
 		CheckForGrabOrRelease(prevFlex);

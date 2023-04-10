@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public Canvas canvas;
+    public Transform canvasPos;
+    public GameObject laser;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,7 +16,24 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (canvas.gameObject.activeSelf)
+            {
+                canvas.gameObject.SetActive(false);
+                laser.SetActive(false);
+            }
+            else
+            {
+                //canvas.transform.SetParent(transform);
+                canvas.transform.position = canvasPos.position;
+                canvas.transform.rotation = canvasPos.rotation;
+                canvas.transform.rotation *= Quaternion.Euler(0, 1, 0);
+                //canvas.transform.SetParent(transform.parent);
+                canvas.gameObject.SetActive(true);
+                laser.SetActive(true);
+            }
+        }
     }
     void FixedUpdate()
     {
