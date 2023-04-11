@@ -57,7 +57,7 @@ public class Toy : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * Mathf.Atan(dir.x / dir.z) + 90, 0);
                 reDirCnt = Random.Range(0, 3f);
             }
-            rigidBody.velocity = dir;
+            rigidBody.velocity = new Vector3(dir.x, rigidBody.velocity.y, dir.z);
             //transform.position += dir;
             yield return new WaitForFixedUpdate();
             reDirCnt -= Time.fixedDeltaTime;

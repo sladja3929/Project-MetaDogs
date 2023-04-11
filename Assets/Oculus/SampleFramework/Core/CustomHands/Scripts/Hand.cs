@@ -156,7 +156,7 @@ namespace OVRTouchSample
                 float xSpeed = xInput * handSpeed;
                 float ySpeed = yInput * handSpeed;
                 float zSpeed = zInput * handSpeed;
-                float zScrollSpeed = zScrollInput * handSpeed * 10;
+                float zScrollSpeed = zScrollInput * handSpeed * 50;
 
                 anchor.localPosition += new Vector3(xSpeed * Time.fixedDeltaTime, ySpeed * Time.fixedDeltaTime, (zSpeed + zScrollSpeed) * Time.fixedDeltaTime);
             }
