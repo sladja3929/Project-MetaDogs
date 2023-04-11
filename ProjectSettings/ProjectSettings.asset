@@ -908,10 +908,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 6e86f92c-1495-4b0d-8dab-d9fd376029fb
+  cloudProjectId: 531fb66b-e5ca-4423-b578-2279aa41d675
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: MetaDogs_Old
+  projectName: MetaDogs
   organizationId: kjunwoo23
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
