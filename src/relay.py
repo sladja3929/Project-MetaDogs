@@ -1,23 +1,28 @@
 #!/src/.venv/bin/python3
 
 from flask import Flask, jsonify, request
+from flask_restx import Resource, Api, Namespace
 import requests
 from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-app = Flask(__name__)
+Relay = Namespace(
+    name="Relay",
+    description="게임 서버 중계 api",
+)
 
-@app.route('/send', methods=['POST'])
-def send():
-    # Get JSON data from request
-    data = request.get_json()
-    
-    retries = 3
-    backoff_factor = 0.3
-    status_forcelist = (500, 400)
+@Relay.route('')
+class Send(Resource):
+    def post(self):
+        # Get JSON data from request
+        data = request.get_json()
         
-    retry = Retry(
+        retries = 3
+        backoff_factor = 0.3
+        status_forcelist = (500, 400)
+    
+        retry = Retry(
         total=retries,
         read=retries,
         connect=retries,
@@ -25,18 +30,15 @@ def send():
         status_forcelist=status_forcelist
         )
 
-    session = requests.Session()
-    adapter = HTTPAdapter(max_retries=retry)
-    session.mount("http://", adapter)
-    session.mount("https://", adapter)
+        session = requests.Session()
+        adapter = HTTPAdapter(max_retries=retry)
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
 
-    url = "http://jsonplaceholder.typicode.com/users"
+        url = "http://jsonplaceholder.typicode.com/users"
 
-    # Send JSON data to external server
-    response = session.get(url, timeout=3)
+        # Send JSON data to external server
+        response = session.get(url, timeout=3)
 
-    # Return response from external server to client
-    return jsonify(response.json())
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000', debug=True)
+        # Return response from external server to client
+        return jsonify(response.json())

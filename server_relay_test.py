@@ -2,6 +2,9 @@
 
 from flask import Flask, jsonify, request
 import requests
+from requests import Session
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 app = Flask(__name__)
 
@@ -10,11 +13,17 @@ def send():
     # Get JSON data from request
     data = request.get_json()
 
-    # Send JSON data to external server
-    response = requests.post('localhost:5001/receive', json=data)
+    retries = 3
+    backoff_factor = 0.3
+    status_forcelist = (500, 400)
 
-    # Return response from external server to client
-    return jsonify(response.json())
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=status_forcelist
+        )
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000', debug=True)
+    session = requests.Session()
+    adapter = HTTPAdapter(max_retries=retry)
