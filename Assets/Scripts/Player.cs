@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+
     public Canvas canvas;
     public Transform canvasPos;
     public GameObject laser;
+    public bool vrMode;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
