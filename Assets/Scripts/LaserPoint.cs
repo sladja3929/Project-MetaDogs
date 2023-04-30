@@ -106,7 +106,7 @@ public class LaserPoint : MonoBehaviour
 
     public void Clicked()
     {
-        Debug.Log(1);
+        //Debug.Log(1);
     }
 }
 

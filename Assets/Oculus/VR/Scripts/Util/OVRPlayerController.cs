@@ -284,8 +284,10 @@ public class OVRPlayerController : MonoBehaviour
 		{
 			CameraUpdated();
 		}
+		if (PlayerPrefs.HasKey("gameMode"))
+			if (PlayerPrefs.GetInt("gameMode") == 0)
+				UpdateMovement();
 
-		UpdateMovement();
 
 		Vector3 moveDirection = Vector3.zero;
 

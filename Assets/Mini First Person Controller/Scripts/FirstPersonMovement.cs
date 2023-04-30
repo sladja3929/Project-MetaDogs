@@ -29,6 +29,8 @@ public class FirstPersonMovement : MonoBehaviour
     void FixedUpdate()
     {
         if (Player.instance.vrMode) return;
+        if (TrainManager.instance.trainMode) return;
+
         // Update IsRunning from input.
         IsRunning = canRun && Input.GetKey(runningKey);
 
