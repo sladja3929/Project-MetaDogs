@@ -11,6 +11,9 @@ public enum GestureType
 public class GestureManager : MonoBehaviour
 {
     [SerializeField] private Transform target;
+    [SerializeField] private float errorRate = 5000f;
+    [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
+    [SerializeField] [Range(100f, 10000f)] private float countPenalty = 100f;
 
     private readonly Dictionary<GestureType, List<Vector3>> dataSet = new();
     private bool isObserving = false;
@@ -39,10 +42,7 @@ public class GestureManager : MonoBehaviour
 
     private IEnumerator AddGestureCoroutine(GestureType type)
     {
-        List<Vector3> inputGesture = new();
-
-        isObserving = true;
-        StartCoroutine(ObserveGestureCoroutine(inputGesture));
+        ObserveGesture(out var inputGesture);
         yield return new WaitUntil(() => !isObserving);
         dataSet[type] = inputGesture;
         flag = true;
@@ -50,10 +50,7 @@ public class GestureManager : MonoBehaviour
 
     private IEnumerator MatchGestureCoroutine()
     {
-        List<Vector3> curGesture = new();
-
-        isObserving = true;
-        StartCoroutine(ObserveGestureCoroutine(curGesture));
+        ObserveGesture(out var curGesture);
         yield return new WaitUntil(() => !isObserving);
 
         foreach(var item in dataSet)
@@ -62,36 +59,76 @@ public class GestureManager : MonoBehaviour
             if (isMatched) break;
         }
 
-        if (isMatched)
-            Debug.Log("앉기에요~~");
-        else
-            Debug.Log("뭐에요 이게?");
         flag = true;
     }
 
     private bool MatchGesture(List<Vector3> curGesture, GestureType type)
     {
-        if (dataSet[type].Count != curGesture.Count)
+        // Set long & short Vector
+        List<Vector3> longVec = curGesture;
+        List<Vector3> shortVec = dataSet[type];
+        if (longVec.Count < shortVec.Count)
         {
-            Debug.Log("정답: " + dataSet[type].Count + " 현재: " + curGesture.Count);
+            longVec = dataSet[type];
+            shortVec = curGesture;
+        }
+
+        // Check Error
+        float dirError = 0f;
+        int shortIdx = 0;
+        for (int longIdx = 0; longIdx < longVec.Count; ++longIdx)
+        {
+            float curError = Mathf.Pow(Vector3.Angle(longVec[longIdx], shortVec[shortIdx]), 2);
+            if (shortIdx + 1 < shortVec.Count)
+            {
+                float nextError = Mathf.Pow(Vector3.Angle(longVec[longIdx], shortVec[shortIdx + 1]), 2);
+                if (curError < nextError)
+                {
+                    dirError += curError;
+                }
+                else
+                {
+                    dirError += nextError;
+                    ++shortIdx;
+                }
+            }
+            else
+            {
+                dirError += curError;
+            }
+        }
+
+        // penalty
+        for (; shortIdx < shortVec.Count; ++shortIdx)
+        {
+            dirError += countPenalty;
+        }
+
+        if (dirError > errorRate)
+        {
+            Debug.Log("에러율로 제스처 다름 | " + "dirError: " + dirError);
             return false;
         }
-
-        float dirError = 0f;
-        for (int i = 0; i < curGesture.Count; ++i)
+        else
         {
-            dirError += Mathf.Pow(Vector3.Angle(dataSet[type][i], curGesture[i]), 2);
+            Debug.Log("제스처 일치: " + type.ToString() + " | dirError: " + dirError);
+            return true;
         }
+    }
 
-        Debug.Log("dirError: " + dirError);
-        if (dirError > 1000f) return false;
-        else return true;
+
+    // 함수 마무리: isObserving == false
+    private void ObserveGesture(out List<Vector3> newList)
+    {
+        newList = new();
+        isObserving = true;
+        StartCoroutine(ObserveGestureCoroutine(newList));
     }
 
     private IEnumerator ObserveGestureCoroutine(List<Vector3> newList)
     {
-        var delay = new WaitForSeconds(0.1f);
-        var longDelay = new WaitForSeconds(0.5f);
+        var observeDelay = new WaitForSeconds(0.1f);
+        var curveDelay = new WaitForSeconds(this.curveDelay);
 
         Vector3 startPos = target.position;
         Vector3 endPos;
@@ -100,7 +137,7 @@ public class GestureManager : MonoBehaviour
         // 초기에 0.5 이상 움직여야 인식 시작
         do
         {
-            yield return delay;
+            yield return observeDelay;
             endPos = target.position;
             prevVec = endPos - startPos;
         } while (prevVec.magnitude < 0.5f);
@@ -111,20 +148,19 @@ public class GestureManager : MonoBehaviour
         isStopped = false;
         while (!isStopped)
         {
-            yield return delay;
+            yield return observeDelay;
             endPos = target.position;
             Vector3 diff = endPos - startPos;
             if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 15f)
             {
-                // 곡선 구간은 무시한다.
-                yield return longDelay;
+                // 곡선 구간 무시
+                yield return curveDelay;
                 endPos = target.position;
                 diff = endPos - startPos;
                 if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 15f)
                 {
                     newList.Add(diff);
                     prevVec = diff;
-                    Debug.Log(newList.Count + "방향: " + prevVec.normalized);
                 }
             }
             else
