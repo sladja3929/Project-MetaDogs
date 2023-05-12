@@ -118,9 +118,9 @@ namespace OculusSampleFramework
 #endif
     }
 
-		public override void Update()
+		public override void FixedUpdate()
         {
-            base.Update();
+            base.FixedUpdate();
 
             Debug.DrawRay(transform.position, transform.forward, Color.red, 0.1f);
             

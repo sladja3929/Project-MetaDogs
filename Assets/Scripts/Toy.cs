@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Toy : MonoBehaviour
 {
+    public Rigidbody rigidBody;
     public float freeMoveSpeed;
     float reDirCnt;
 
@@ -12,7 +13,7 @@ public class Toy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(ToyRandMove(60));
+        StartCoroutine(ToyRandMove(true));
     }
 
     // Update is called once per frame
@@ -33,13 +34,32 @@ public class Toy : MonoBehaviour
         {
             if (reDirCnt < 0)
             {
-                dir = new Vector3(Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed) * Time.fixedDeltaTime, 0, Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed) * Time.fixedDeltaTime);
+                dir = new Vector3(Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed), rigidBody.velocity.y, Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed));
                 transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * Mathf.Atan(dir.x/dir.z) + 90, 0);
                 reDirCnt = Random.Range(0, 3f);
             }
-            transform.position += dir;
+            rigidBody.velocity = dir;
+            //transform.position += dir;
             yield return new WaitForFixedUpdate();
             t -= Time.fixedDeltaTime;
+            reDirCnt -= Time.fixedDeltaTime;
+        }
+    }
+    public IEnumerator ToyRandMove(bool infinite)
+    {
+        reDirCnt = 0;
+        Vector3 dir = new Vector3(0, 0, 0);
+        while (infinite)
+        {
+            if (reDirCnt < 0)
+            {
+                dir = new Vector3(Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed), rigidBody.velocity.y, Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed));
+                transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * Mathf.Atan(dir.x / dir.z) + 90, 0);
+                reDirCnt = Random.Range(0, 3f);
+            }
+            rigidBody.velocity = new Vector3(dir.x, rigidBody.velocity.y, dir.z);
+            //transform.position += dir;
+            yield return new WaitForFixedUpdate();
             reDirCnt -= Time.fixedDeltaTime;
         }
     }

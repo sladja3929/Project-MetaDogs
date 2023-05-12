@@ -7,7 +7,6 @@
     "com.unity.ml-agents": "file:D:/Unity ML Agent/ml-agents-release_20/com.unity.ml-agents",
     "com.unity.ml-agents.extensions": "file:D:/Unity ML Agent/ml-agents-release_20/com.unity.ml-agents.extensions",
     "com.unity.postprocessing": "3.2.2",
-    "com.unity.progrids": "3.0.3-preview.6",
     "com.unity.render-pipelines.universal": "12.1.10",
     "com.unity.test-framework": "1.1.31",
     "com.unity.textmeshpro": "3.0.6",

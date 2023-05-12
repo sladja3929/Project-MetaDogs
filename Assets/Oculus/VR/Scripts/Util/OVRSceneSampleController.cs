@@ -219,10 +219,11 @@ public class OVRSceneSampleController : MonoBehaviour
     /// </summary>
     void UpdateRecenterPose()
     {
-		//todo: enable for Unity Input System
+        //todo: enable for Unity Input System
 #if ENABLE_LEGACY_INPUT_MANAGER
-		if (Input.GetKeyDown(KeyCode.R))
-            OVRManager.display.RecenterPose();
+        if (Input.GetKeyDown(KeyCode.R))
+            Debug.Log("RBlock");
+            //OVRManager.display.RecenterPose();
 #endif
     }
 }

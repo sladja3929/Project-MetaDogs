@@ -68,6 +68,8 @@ public class OVRHand : MonoBehaviour,
 	public TrackingConfidence HandConfidence { get; private set; }
 	public bool IsDominantHand { get; private set; }
 
+	public float handSpeed;
+
 	private void Awake()
 	{
 		_pointerPoseGO = new GameObject();
@@ -114,7 +116,7 @@ public class OVRHand : MonoBehaviour,
 			IsTracked = false;
 			IsSystemGestureInProgress = false;
 			IsPointerPoseValid = false;
-			PointerPose.localPosition = Vector3.zero;
+			//PointerPose.localPosition = Vector3.zero;
 			PointerPose.localRotation = Quaternion.identity;
 			HandScale = 1.0f;
 			HandConfidence = TrackingConfidence.Low;

@@ -30,7 +30,7 @@ public class OVRGridCube : MonoBehaviour
 	/// <summary>
 	/// The key that toggles the grid of cubes.
 	/// </summary>
-	public KeyCode GridKey                     = KeyCode.G;
+	public KeyCode GridKey                     = KeyCode.K;
 
 	private GameObject 	CubeGrid			   = null;
 
@@ -71,6 +71,7 @@ public class OVRGridCube : MonoBehaviour
 		// Toggle the grid cube display on 'G'
 		if(Input.GetKeyDown(GridKey))
 		{
+			Debug.Log(gameObject.name + "this");
 			if(CubeGridOn == false)
 			{
 				CubeGridOn = true;

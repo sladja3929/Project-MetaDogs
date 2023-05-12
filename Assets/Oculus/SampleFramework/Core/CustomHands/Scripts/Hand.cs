@@ -73,6 +73,12 @@ namespace OVRTouchSample
 
         private bool m_restoreOnInputAcquired = false;
 
+        public Transform anchor;
+        public float handSpeed;
+        public bool isMyTurn;
+        bool spacePressed;
+        bool shiftPressed;
+
         private void Awake()
         {
             m_grabber = GetComponent<OVRGrabber>();
@@ -107,6 +113,14 @@ namespace OVRTouchSample
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.C))
+                ResetHandKeyboard();
+            if (Input.GetKeyDown(KeyCode.V))
+                ResetHandVR();
+            if (Input.GetKeyDown(KeyCode.Tab))
+                if (isMyTurn) isMyTurn = false;
+                else isMyTurn = true;
+
             UpdateCapTouchStates();
 
             m_pointBlend = InputValueRateChange(m_isPointing, m_pointBlend);
@@ -126,6 +140,26 @@ namespace OVRTouchSample
         {
             m_isPointing = !OVRInput.Get(OVRInput.NearTouch.PrimaryIndexTrigger, m_controller);
             m_isGivingThumbsUp = !OVRInput.Get(OVRInput.NearTouch.PrimaryThumbButtons, m_controller);
+        }
+
+        private void FixedUpdate()
+        {
+            if (isMyTurn)
+            {
+                // 수평축과 수직축의 입력값을 감지하여 저장
+                float xInput = Input.GetAxis("HorizontalArrow");
+                float yInput = Input.GetAxis("UpDownArrow");
+                float zInput = Input.GetAxis("VerticalArrow"); 
+                float zScrollInput = Input.GetAxis("Mouse ScrollWheel");
+
+                // 실제 이동 속도를 입력값과 이동 속력을 사용해 결정
+                float xSpeed = xInput * handSpeed;
+                float ySpeed = yInput * handSpeed;
+                float zSpeed = zInput * handSpeed;
+                float zScrollSpeed = zScrollInput * handSpeed * 50;
+
+                anchor.localPosition += new Vector3(xSpeed * Time.fixedDeltaTime, ySpeed * Time.fixedDeltaTime, (zSpeed + zScrollSpeed) * Time.fixedDeltaTime);
+            }
         }
 
         private void LateUpdate()
@@ -253,6 +287,19 @@ namespace OVRTouchSample
                     collider.transform.localScale = new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
                 }
             }
+        }
+        public void ResetHandKeyboard()
+        {
+            if (m_controller == OVRInput.Controller.RTouch)
+                anchor.localPosition = new Vector3(0.35f, -0.15f, 0.4f);
+            else if (m_controller == OVRInput.Controller.LTouch)
+                anchor.localPosition = new Vector3(-0.35f, -0.15f, 0.4f);
+            anchor.localRotation = Quaternion.identity;
+        }
+        public void ResetHandVR()
+        {
+            anchor.localPosition *= 0;
+            anchor.localRotation = Quaternion.identity;
         }
     }
 }
