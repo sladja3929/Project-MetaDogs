@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public enum GestureType
 {
@@ -10,12 +10,16 @@ public enum GestureType
 
 public class GestureManager : MonoBehaviour
 {
+    public TextMeshProUGUI resultText;
+    public TextMeshProUGUI countText;
+
     [SerializeField] private Transform target;
-    [SerializeField] private float errorRate = 5000f;
+    [SerializeField] private float errorRatePerCount = 3750f;
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
-    [SerializeField] [Range(100f, 10000f)] private float countPenalty = 100f;
+    [SerializeField] [Range(100f, 10000f)] private float countPenalty = 3000f;
 
     private readonly Dictionary<GestureType, List<Vector3>> dataSet = new();
+    private float errorRate = 0f;
     private bool isObserving = false;
     private bool isMatched = false;
     private bool isStopped = false;
@@ -24,18 +28,20 @@ public class GestureManager : MonoBehaviour
 
     void Update()
     {
-        if (flag && Input.GetKeyDown(KeyCode.Z))
+        if (flag && OVRInput.GetDown(OVRInput.Button.One))
         {
             flag = false;
+            resultText.text = "start";
             StartCoroutine(AddGestureCoroutine(GestureType.SitDown));
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick))
         {
             isStopped = true;
         }
-        if (flag && Input.GetKeyDown(KeyCode.C))
+        if (flag && OVRInput.GetDown(OVRInput.Button.Two))
         {
             flag = false;
+            resultText.text = "validate start";
             StartCoroutine(MatchGestureCoroutine());
         }
     }
@@ -106,12 +112,14 @@ public class GestureManager : MonoBehaviour
 
         if (dirError > errorRate)
         {
-            Debug.Log("에러율로 제스처 다름 | " + "dirError: " + dirError);
+            resultText.text = "diff... | " + dirError + " / " + errorRate;
+            Debug.Log("에러율로 제스처 다름 | " + dirError + " / " + errorRate);
             return false;
         }
         else
         {
-            Debug.Log("제스처 일치: " + type.ToString() + " | dirError: " + dirError);
+            resultText.text = "correct!!: " + type.ToString() + " | " + dirError + " / " + errorRate;
+            Debug.Log("제스처 일치: " + type.ToString() + " | " + dirError + " / " + errorRate);
             return true;
         }
     }
@@ -134,18 +142,22 @@ public class GestureManager : MonoBehaviour
         Vector3 endPos;
         Vector3 prevVec;
 
+        isStopped = false;
+
         // 초기에 0.5 이상 움직여야 인식 시작
         do
         {
             yield return observeDelay;
             endPos = target.position;
             prevVec = endPos - startPos;
-        } while (prevVec.magnitude < 0.5f);
+            if (isStopped)
+            {
+                resultText.text = "Move More !!";
+            }
+        } while (prevVec.magnitude < 0.1f);
         startPos = endPos;
-        Debug.Log(newList.Count + "방향: " + prevVec.normalized);
         newList.Add(prevVec);
 
-        isStopped = false;
         while (!isStopped)
         {
             yield return observeDelay;
@@ -169,7 +181,9 @@ public class GestureManager : MonoBehaviour
             }
             startPos = endPos;
         }
-        Debug.Log("저징된 데이터 개수: " + newList.Count);
+        //Debug.Log("저징된 데이터 개수: " + newList.Count);
+        countText.text = $"{newList.Count}";
+        errorRate = newList.Count * errorRatePerCount;
         isObserving = false;
     }
 }
