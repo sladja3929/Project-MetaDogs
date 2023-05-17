@@ -10,6 +10,10 @@ public class TrainManager : MonoBehaviour
     public float maxHamJudgeTime;
     public bool hamNoticed;
 
+    public Transform rHandTransform;
+
+    public GameObject table;
+
     //public BoxCollider[] hamArea = new BoxCollider[6];
 
     private void Awake()
@@ -60,7 +64,8 @@ public class TrainManager : MonoBehaviour
     }
 
     public void RecordStart()   //녹화 시작, 오민 '해 줘'
-    {
+    {   //펫이 포즈 취하고 이 자세가 맞습니까? 했을 때 네 하면 이 함수 실행
+        //rHandTransform이 오른손 transform 정보
         DogAnimator.instance.trainUIAnimator.SetBool("appear", false);
         Player.instance.laser.SetActive(false);
 

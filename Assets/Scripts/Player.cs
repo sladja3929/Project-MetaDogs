@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //if (vrMode) GetComponent<CapsuleCollider>().enabled = false;
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     {
         if (vrMode) //vrMode 켜져있을 때 메뉴창 열기
         {
-            if (OVRInput.GetDown(OVRInput.Button.Three))
+            if (OVRInput.GetDown(OVRInput.Button.Four))
                 if (canvas.gameObject.activeSelf)
                 {
                     canvas.gameObject.SetActive(false);
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E))    //간식 들기
+        if (Input.GetKeyDown(KeyCode.E) || OVRInput.GetDown(OVRInput.Button.Three))    //간식 들기
         {
             if (!ham.activeSelf)
                 ham.SetActive(true);

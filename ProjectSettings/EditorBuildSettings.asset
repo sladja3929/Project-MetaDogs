@@ -7,7 +7,10 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: 
-    guid: 99c9720ab356a0642a771bea13969a05
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/PetSelect.unity
+    guid: 85751fd6e800b3d4c8d9c11809cbb188
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 9fe2e548fa074c14bb5c86c432ac0ca8

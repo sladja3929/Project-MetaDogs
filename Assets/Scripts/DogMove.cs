@@ -52,9 +52,9 @@ public class DogMove : MonoBehaviour
 
         if (Player.instance.ham.activeSelf) //°£½Ä µé°í ÀÖÀ¸¸é ÂÑ¾Æ¿È
         {
-            if ((DogAnimator.instance.gameObject.transform.position - Player.instance.transform.position).magnitude > agent.stoppingDistance + 1)
+            if ((DogAnimator.instance.gameObject.transform.position - target.position).magnitude > agent.stoppingDistance + 1)
             {
-                agent.SetDestination(Player.instance.transform.position);
+                agent.SetDestination(target.position);
                 agent.speed = 3f;
                 DogAnimator.instance.animator.SetInteger("moveSpeed", 2);
             }
