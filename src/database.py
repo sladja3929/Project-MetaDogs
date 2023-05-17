@@ -5,13 +5,13 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-Relay = Namespace(
-    name="Relay",
-    description="게임 서버 중계 api",
+Database = Namespace(
+    name="Database",
+    description="db 중계 api",
 )
 
-@Relay.route('')
-class Send(Resource):
+@Database.route('/load_settings')
+class Load_Settings(Resource):
     def post(self):
         # Get JSON data from request
         data = request.get_json()
