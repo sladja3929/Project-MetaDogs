@@ -1,0 +1,7 @@
+[
+    {
+        "bapp": { "name" : "My BApp" }, 
+        "callback": { "success": "mybapp:\/\/klipwallet\/success", "fail": "mybapp:\/\/klipwallet\/fail" }, 
+        "type": "auth"
+    }
+]
