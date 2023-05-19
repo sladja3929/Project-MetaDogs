@@ -5,6 +5,7 @@ using UnityEngine;
 public class Toy : MonoBehaviour
 {
     public Rigidbody rigidBody;
+    public Animator toyAnimator;
     public float freeMoveSpeed;
     float reDirCnt;
 
@@ -51,14 +52,31 @@ public class Toy : MonoBehaviour
         Vector3 dir = new Vector3(0, 0, 0);
         while (infinite)
         {
-            if (reDirCnt < 0)
+            if (Player.instance.controller.activeSelf)
             {
-                dir = new Vector3(Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed), rigidBody.velocity.y, Random.Range(-1f, 1f) * Random.Range(0f, freeMoveSpeed));
-                transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * Mathf.Atan(dir.x / dir.z) + 90, 0);
-                reDirCnt = Random.Range(0, 3f);
+                if (!toyAnimator.GetBool("toyOn"))
+                    toyAnimator.SetBool("toyOn", true);
+                if (reDirCnt < 0)
+                {
+                    dir = new Vector3(Random.Range(-1f, 1f) * Random.Range(0.5f * freeMoveSpeed, freeMoveSpeed), rigidBody.velocity.y, Random.Range(-1f, 1f) * Random.Range(0.5f * freeMoveSpeed, freeMoveSpeed));
+                    transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * Mathf.Atan(dir.x / dir.z), 0);
+                    if (dir.x > 0 && dir.z > 0)
+                        transform.rotation *= Quaternion.Euler(1, -1, 1);
+                    /*if (dir.x < 0 && dir.z > 0)
+                        transform.rotation *= Quaternion.Euler(1, 1, 1);
+                    else if (dir.x < 0 && dir.z < 0)
+                        transform.rotation *= Quaternion.Euler(1, -1, 1);*/
+                    else if (dir.x > 0 && dir.z < 0)
+                        transform.rotation *= Quaternion.Euler(1, -1, 1);
+                    reDirCnt = Random.Range(0, 3f);
+                }
+                rigidBody.velocity = new Vector3(dir.x, rigidBody.velocity.y, dir.z);
+                //transform.position += dir;
             }
-            rigidBody.velocity = new Vector3(dir.x, rigidBody.velocity.y, dir.z);
-            //transform.position += dir;
+            else
+            {
+                toyAnimator.SetBool("toyOn", false);
+            }
             yield return new WaitForFixedUpdate();
             reDirCnt -= Time.fixedDeltaTime;
         }

@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public GameObject laser;
     public bool vrMode;
     public GameObject ham;
+    public GameObject controller;
 
     private void Awake()
     {
@@ -72,6 +73,14 @@ public class Player : MonoBehaviour
                 ham.SetActive(true);
             else
                 ham.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Three))    //장난감 키기
+        {
+            if (!controller.activeSelf)
+                controller.SetActive(true);
+            else
+                controller.SetActive(false);
         }
     }
     void FixedUpdate()

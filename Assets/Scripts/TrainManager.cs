@@ -9,6 +9,7 @@ public class TrainManager : MonoBehaviour
 
     public float maxHamJudgeTime;
     public bool hamNoticed;
+    public GameObject[] hitBoxes = new GameObject[6];
 
     public Transform rHandTransform;
 
@@ -40,6 +41,8 @@ public class TrainManager : MonoBehaviour
                 TrainModeEnable();
             }
         }
+        if (Input.GetKeyDown(KeyCode.G))
+            HitBoxOnOff();
     }
 
     public void TrainModeEnable()
@@ -84,5 +87,19 @@ public class TrainManager : MonoBehaviour
         DogAnimator.instance.trainUIAnimator.SetBool("appear", false);
         Player.instance.laser.SetActive(false);
 
+    }
+
+    public void HitBoxOnOff()
+    {
+        if (hitBoxes[0].activeSelf)
+            for (int i = 0; i < 6; i++)
+            {
+                hitBoxes[i].SetActive(false);
+            }
+        else
+            for (int i = 0; i < 6; i++)
+            {
+                hitBoxes[i].SetActive(true);
+            }
     }
 }
