@@ -1,7 +1,7 @@
-host = '203.250.33'
+host = '203.250.148.33'
 port = 20306
 user = 'root'
-passwd = 'mdogs*nklk*'
+passwd = 'Mdogs*nklk*'
 userdb = 'user'
 nftdb = 'nft'
 logdb = 'log'
@@ -12,6 +12,7 @@ import pymysql
 class Database():
     def __init__(self, dbname):
         self.db = pymysql.connect(host = host,
+                                  port = port,
                                   user = user,
                                   password=passwd,
                                   db=dbname,

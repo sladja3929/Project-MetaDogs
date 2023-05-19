@@ -15,22 +15,26 @@ UserDB = Namespace(
 @UserDB.route('/load_settings')
 class Load_Settings(Resource):
     def post(self):
+        db = Database(userdb)
         # Get JSON data from request
         data = request.get_json()
 
-        sql = "SELECT savefile"
-        row = Database.executeALL(sql)
+        sql = "SELECT wallet_id, nickname from user where wallet_id=%s"
+        row = db.executeAll(sql, data['wallet_id'])
+        
+        print(row)
 
         return row
     
 @UserDB.route('/save_settings')
 class Save_Settings(Resource):
     def post(self):
+        db = Database(userdb)
         # Get JSON data from request
         data = request.get_json()
 
         sql = ""
-        Database.execute(sql)
-        Database.commit()
+        db.execute(sql)
+        db.commit()
 
         return "success"
