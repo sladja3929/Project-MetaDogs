@@ -5,14 +5,27 @@ using TMPro;
 
 public enum GestureType
 {
-    SitDown
+    Undecided = -1,
+    None,
+    SitDown,
+    SitSide,
+    Lie,
+    Jump,
+    Die,
+    Attack,
 }
 
 public class GestureManager : MonoBehaviour
 {
-    public TextMeshProUGUI resultText;
-    public TextMeshProUGUI countText;
+    private enum ManagerMode
+    {
+        None,
+        Sensing,
+        Validating,
+    }
 
+    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private TextMeshProUGUI countText;
     [SerializeField] private Transform target;
     [SerializeField] private float errorRatePerCount = 3750f;
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
@@ -21,28 +34,57 @@ public class GestureManager : MonoBehaviour
     private readonly Dictionary<GestureType, List<Vector3>> dataSet = new();
     private float errorRate = 0f;
     private bool isObserving = false;
-    private bool isMatched = false;
     private bool isStopped = false;
+    private bool isWorking = false;
 
-    private bool flag = true;
+    private int isAllowedChangingGesture = 0;
+    private GestureType gestureToDetect;
+    private ManagerMode mode = ManagerMode.None;
+
+
+
+
+    public GestureType CurrentType { private set; get; } = GestureType.None;
+    public void StartSensing(GestureType type)
+    {
+        gestureToDetect = type;
+        CurrentType = type;
+        mode = ManagerMode.Sensing;
+    }
+    public void StartValidate()
+    {
+        CurrentType = GestureType.Undecided;
+        mode = ManagerMode.Validating;
+    }
+
 
     void Update()
     {
-        if (flag && OVRInput.GetDown(OVRInput.Button.One))
+        if (mode == ManagerMode.None) return;
+
+        else if (mode == ManagerMode.Sensing)
         {
-            flag = false;
-            resultText.text = "start";
-            StartCoroutine(AddGestureCoroutine(GestureType.SitDown));
+            if (!isWorking && OVRInput.GetDown(OVRInput.Button.One))
+            {
+                isWorking = true;
+                resultText.text = "start";
+                StartCoroutine(AddGestureCoroutine(gestureToDetect));
+            }
         }
-        if (OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick))
+        else if (mode == ManagerMode.Validating)
+        {
+            if (!isWorking && OVRInput.GetDown(OVRInput.Button.Two))
+            {
+                isWorking = true;
+                resultText.text = "validate start";
+                StartCoroutine(MatchGestureCoroutine());
+            }
+        }
+
+        // 제스처 관찰 중지
+        if (isObserving && OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick))
         {
             isStopped = true;
-        }
-        if (flag && OVRInput.GetDown(OVRInput.Button.Two))
-        {
-            flag = false;
-            resultText.text = "validate start";
-            StartCoroutine(MatchGestureCoroutine());
         }
     }
 
@@ -50,8 +92,35 @@ public class GestureManager : MonoBehaviour
     {
         ObserveGesture(out var inputGesture);
         yield return new WaitUntil(() => !isObserving);
-        dataSet[type] = inputGesture;
-        flag = true;
+
+        if (dataSet.ContainsKey(type))
+        {
+            // 기존 행동에 다른 제스처 감지 시
+            if (!IsMatched(inputGesture, type))
+            {
+                yield return new WaitUntil(() => isAllowedChangingGesture != 0);
+
+                // 제스처 변경을 허용했을 때, 기존 데이터 초기화
+                if (isAllowedChangingGesture == 1)
+                {
+                    dataSet[type] = inputGesture;
+                }
+                // 제스처 변경을 하지 않았을 때, 현재 입력 무시
+                else if (isAllowedChangingGesture == -1)
+                {
+
+                }
+                isAllowedChangingGesture = 0;
+            }
+        }
+        else
+        {
+            // 새로 제스처 추가
+            dataSet[type] = inputGesture;
+        }
+
+        mode = ManagerMode.None;
+        isWorking = false;
     }
 
     private IEnumerator MatchGestureCoroutine()
@@ -61,16 +130,19 @@ public class GestureManager : MonoBehaviour
 
         foreach(var item in dataSet)
         {
-            isMatched = MatchGesture(curGesture, item.Key);
-            if (isMatched) break;
+            if (IsMatched(curGesture, item.Key))
+            {
+                CurrentType = item.Key;
+                break;
+            }
         }
 
-        flag = true;
+        isWorking = false;
     }
 
-    private bool MatchGesture(List<Vector3> curGesture, GestureType type)
+    private bool IsMatched(List<Vector3> curGesture, GestureType type)
     {
-        // Set long & short Vector
+        // Set long & short vector
         List<Vector3> longVec = curGesture;
         List<Vector3> shortVec = dataSet[type];
         if (longVec.Count < shortVec.Count)
@@ -84,6 +156,7 @@ public class GestureManager : MonoBehaviour
         int shortIdx = 0;
         for (int longIdx = 0; longIdx < longVec.Count; ++longIdx)
         {
+            // Cosine similarity를 이용해 MSE 계산
             float curError = Mathf.Pow(Vector3.Angle(longVec[longIdx], shortVec[shortIdx]), 2);
             if (shortIdx + 1 < shortVec.Count)
             {
@@ -104,7 +177,7 @@ public class GestureManager : MonoBehaviour
             }
         }
 
-        // penalty
+        // Penalty
         for (; shortIdx < shortVec.Count; ++shortIdx)
         {
             dirError += countPenalty;
@@ -113,13 +186,11 @@ public class GestureManager : MonoBehaviour
         if (dirError > errorRate)
         {
             resultText.text = "diff... | " + dirError + " / " + errorRate;
-            Debug.Log("에러율로 제스처 다름 | " + dirError + " / " + errorRate);
             return false;
         }
         else
         {
             resultText.text = "correct!!: " + type.ToString() + " | " + dirError + " / " + errorRate;
-            Debug.Log("제스처 일치: " + type.ToString() + " | " + dirError + " / " + errorRate);
             return true;
         }
     }
@@ -144,7 +215,7 @@ public class GestureManager : MonoBehaviour
 
         isStopped = false;
 
-        // 초기에 0.5 이상 움직여야 인식 시작
+        // 초기에 0.1 이상 움직여야 인식 시작
         do
         {
             yield return observeDelay;
@@ -181,7 +252,6 @@ public class GestureManager : MonoBehaviour
             }
             startPos = endPos;
         }
-        //Debug.Log("저징된 데이터 개수: " + newList.Count);
         countText.text = $"{newList.Count}";
         errorRate = newList.Count * errorRatePerCount;
         isObserving = false;

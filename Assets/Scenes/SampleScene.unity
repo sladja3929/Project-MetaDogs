@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: 1886a7586ae500c439dc72de669677a8, type: 3}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.10117787, g: 0.2880348, b: 0.5371327, a: 1}
+  m_IndirectSpecularColor: {r: 0.10063326, g: 0.28698754, b: 0.5346657, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3048,7 +3048,7 @@ MonoBehaviour:
   canvas: {fileID: 1558462812}
   canvasPos: {fileID: 1652222549}
   laser: {fileID: 1139070490}
-  vrMode: 0
+  vrMode: 1
   ham: {fileID: 215994011}
 --- !u!54 &475575049
 Rigidbody:
