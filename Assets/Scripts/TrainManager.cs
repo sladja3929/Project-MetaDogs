@@ -9,6 +9,11 @@ public class TrainManager : MonoBehaviour
 
     public float maxHamJudgeTime;
     public bool hamNoticed;
+    public GameObject[] hitBoxes = new GameObject[6];
+
+    public Transform rHandTransform;
+
+    public GameObject table;
 
     //public BoxCollider[] hamArea = new BoxCollider[6];
 
@@ -36,6 +41,8 @@ public class TrainManager : MonoBehaviour
                 TrainModeEnable();
             }
         }
+        if (Input.GetKeyDown(KeyCode.G))
+            HitBoxOnOff();
     }
 
     public void TrainModeEnable()
@@ -60,7 +67,8 @@ public class TrainManager : MonoBehaviour
     }
 
     public void RecordStart()   //녹화 시작, 오민 '해 줘'
-    {
+    {   //펫이 포즈 취하고 이 자세가 맞습니까? 했을 때 네 하면 이 함수 실행
+        //rHandTransform이 오른손 transform 정보
         DogAnimator.instance.trainUIAnimator.SetBool("appear", false);
         Player.instance.laser.SetActive(false);
 
@@ -79,5 +87,19 @@ public class TrainManager : MonoBehaviour
         DogAnimator.instance.trainUIAnimator.SetBool("appear", false);
         Player.instance.laser.SetActive(false);
 
+    }
+
+    public void HitBoxOnOff()
+    {
+        if (hitBoxes[0].activeSelf)
+            for (int i = 0; i < 6; i++)
+            {
+                hitBoxes[i].SetActive(false);
+            }
+        else
+            for (int i = 0; i < 6; i++)
+            {
+                hitBoxes[i].SetActive(true);
+            }
     }
 }

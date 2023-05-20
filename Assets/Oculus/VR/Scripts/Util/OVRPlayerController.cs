@@ -284,9 +284,8 @@ public class OVRPlayerController : MonoBehaviour
 		{
 			CameraUpdated();
 		}
-		if (PlayerPrefs.HasKey("gameMode"))
-			if (PlayerPrefs.GetInt("gameMode") == 0)
-				UpdateMovement();
+
+		UpdateMovement();
 
 
 		Vector3 moveDirection = Vector3.zero;
@@ -342,93 +341,95 @@ public class OVRPlayerController : MonoBehaviour
 		if (HaltUpdateMovement)
 			return;
 
-		if (EnableLinearMovement)
-		{
-			bool moveForward = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
-			bool moveLeft = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
-			bool moveRight = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
-			bool moveBack = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+		if (PlayerPrefs.HasKey("playMode"))
+			if (PlayerPrefs.GetInt("playMode") == 0)
+				if (EnableLinearMovement)
+				{
+					bool moveForward = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+					bool moveLeft = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+					bool moveRight = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+					bool moveBack = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
 
-			bool dpad_move = false;
+					bool dpad_move = false;
 
-			if (OVRInput.Get(OVRInput.Button.DpadUp))
-			{
-				moveForward = true;
-				dpad_move = true;
+					if (OVRInput.Get(OVRInput.Button.DpadUp))
+					{
+						moveForward = true;
+						dpad_move = true;
 
-			}
+					}
 
-			if (OVRInput.Get(OVRInput.Button.DpadDown))
-			{
-				moveBack = true;
-				dpad_move = true;
-			}
+					if (OVRInput.Get(OVRInput.Button.DpadDown))
+					{
+						moveBack = true;
+						dpad_move = true;
+					}
 
-			MoveScale = 1.0f;
+					MoveScale = 1.0f;
 
-			if ((moveForward && moveLeft) || (moveForward && moveRight) ||
-				(moveBack && moveLeft) || (moveBack && moveRight))
-				MoveScale = 0.70710678f;
+					if ((moveForward && moveLeft) || (moveForward && moveRight) ||
+						(moveBack && moveLeft) || (moveBack && moveRight))
+						MoveScale = 0.70710678f;
 
-			// No positional movement if we are in the air
-			if (!Controller.isGrounded)
-				MoveScale = 0.0f;
+					// No positional movement if we are in the air
+					if (!Controller.isGrounded)
+						MoveScale = 0.0f;
 
-			MoveScale *= SimulationRate * Time.deltaTime;
+					MoveScale *= SimulationRate * Time.deltaTime;
 
-			// Compute this for key movement
-			float moveInfluence = Acceleration * 0.1f * MoveScale * MoveScaleMultiplier;
+					// Compute this for key movement
+					float moveInfluence = Acceleration * 0.1f * MoveScale * MoveScaleMultiplier;
 
-			// Run!
-			if (dpad_move || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-				moveInfluence *= 2.0f;
+					// Run!
+					if (dpad_move || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+						moveInfluence *= 2.0f;
 
-			Quaternion ort = transform.rotation;
-			Vector3 ortEuler = ort.eulerAngles;
-			ortEuler.z = ortEuler.x = 0f;
-			ort = Quaternion.Euler(ortEuler);
+					Quaternion ort = transform.rotation;
+					Vector3 ortEuler = ort.eulerAngles;
+					ortEuler.z = ortEuler.x = 0f;
+					ort = Quaternion.Euler(ortEuler);
 
-			if (moveForward)
-				MoveThrottle += ort * (transform.lossyScale.z * moveInfluence * Vector3.forward);
-			if (moveBack)
-				MoveThrottle += ort * (transform.lossyScale.z * moveInfluence * BackAndSideDampen * Vector3.back);
-			if (moveLeft)
-				MoveThrottle += ort * (transform.lossyScale.x * moveInfluence * BackAndSideDampen * Vector3.left);
-			if (moveRight)
-				MoveThrottle += ort * (transform.lossyScale.x * moveInfluence * BackAndSideDampen * Vector3.right);
+					if (moveForward)
+						MoveThrottle += ort * (transform.lossyScale.z * moveInfluence * Vector3.forward);
+					if (moveBack)
+						MoveThrottle += ort * (transform.lossyScale.z * moveInfluence * BackAndSideDampen * Vector3.back);
+					if (moveLeft)
+						MoveThrottle += ort * (transform.lossyScale.x * moveInfluence * BackAndSideDampen * Vector3.left);
+					if (moveRight)
+						MoveThrottle += ort * (transform.lossyScale.x * moveInfluence * BackAndSideDampen * Vector3.right);
 
 
 
-			moveInfluence = Acceleration * 0.1f * MoveScale * MoveScaleMultiplier;
+					moveInfluence = Acceleration * 0.1f * MoveScale * MoveScaleMultiplier;
 
 #if !UNITY_ANDROID // LeftTrigger not avail on Android game pad
-			moveInfluence *= 1.0f + OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger);
+					moveInfluence *= 1.0f + OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger);
 #endif
 
-			Vector2 primaryAxis = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+					Vector2 primaryAxis = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
 
-			// If speed quantization is enabled, adjust the input to the number of fixed speed steps.
-			if (FixedSpeedSteps > 0)
-			{
-				primaryAxis.y = Mathf.Round(primaryAxis.y * FixedSpeedSteps) / FixedSpeedSteps;
-				primaryAxis.x = Mathf.Round(primaryAxis.x * FixedSpeedSteps) / FixedSpeedSteps;
-			}
+					// If speed quantization is enabled, adjust the input to the number of fixed speed steps.
+					if (FixedSpeedSteps > 0)
+					{
+						primaryAxis.y = Mathf.Round(primaryAxis.y * FixedSpeedSteps) / FixedSpeedSteps;
+						primaryAxis.x = Mathf.Round(primaryAxis.x * FixedSpeedSteps) / FixedSpeedSteps;
+					}
 
-			if (primaryAxis.y > 0.0f)
-				MoveThrottle += ort * (primaryAxis.y * transform.lossyScale.z * moveInfluence * Vector3.forward);
+					if (primaryAxis.y > 0.0f)
+						MoveThrottle += ort * (primaryAxis.y * transform.lossyScale.z * moveInfluence * Vector3.forward);
 
-			if (primaryAxis.y < 0.0f)
-				MoveThrottle += ort * (Mathf.Abs(primaryAxis.y) * transform.lossyScale.z * moveInfluence *
-									   BackAndSideDampen * Vector3.back);
+					if (primaryAxis.y < 0.0f)
+						MoveThrottle += ort * (Mathf.Abs(primaryAxis.y) * transform.lossyScale.z * moveInfluence *
+											   BackAndSideDampen * Vector3.back);
 
-			if (primaryAxis.x < 0.0f)
-				MoveThrottle += ort * (Mathf.Abs(primaryAxis.x) * transform.lossyScale.x * moveInfluence *
-									   BackAndSideDampen * Vector3.left);
+					if (primaryAxis.x < 0.0f)
+						MoveThrottle += ort * (Mathf.Abs(primaryAxis.x) * transform.lossyScale.x * moveInfluence *
+											   BackAndSideDampen * Vector3.left);
 
-			if (primaryAxis.x > 0.0f)
-				MoveThrottle += ort * (primaryAxis.x * transform.lossyScale.x * moveInfluence * BackAndSideDampen *
-									   Vector3.right);
-		}
+					if (primaryAxis.x > 0.0f)
+						MoveThrottle += ort * (primaryAxis.x * transform.lossyScale.x * moveInfluence * BackAndSideDampen *
+											   Vector3.right);
+				}
 
 		if (EnableRotation)
 		{

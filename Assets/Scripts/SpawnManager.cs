@@ -28,6 +28,7 @@ public class SpawnManager : MonoBehaviour
             }
             else if (PlayerPrefs.GetInt("playMode") == 1)
             {
+                TrainManager.instance.table.SetActive(false);
                 Player.instance.transform.position = playerSpawnPoints[1].position;
                 Player.instance.transform.rotation = playerSpawnPoints[1].rotation;
                 DogAnimator.instance.gameObject.transform.position = petSpawnPoints[1].position;

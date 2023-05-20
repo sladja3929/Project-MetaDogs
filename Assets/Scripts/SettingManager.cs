@@ -35,6 +35,11 @@ public class SettingManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void ToPetSelect()
+    {
+        SceneManager.LoadScene("PetSelect");
+    }
+
     public void ExitGame()
     {
 #if UNITY_EDITOR
