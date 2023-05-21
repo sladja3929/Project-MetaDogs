@@ -25,4 +25,4 @@ COPY src/ .
 #install api dependencies
 RUN pip install -r requirements.txt
 
-CMD [ "python3", "./mlagent.py" ]
+CMD [ "python3", "./app.py" ]
