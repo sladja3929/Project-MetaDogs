@@ -8,7 +8,7 @@ COPY mlagent/ .
 
 #install mlagent dependencies
 RUN python -m pip install pip==21.2.4
-RUN pip intall -r requirements.txt
+RUN pip install -r requirements.txt
 
 RUN git clone --branch release_20 https://github.com/Unity-Technologies/ml-agents.git
 RUN pip install -e ml-agents/ml-agents-envs/
