@@ -10,12 +10,12 @@ charset = 'utf8'
 import pymysql
 
 class Database():
-    def __init__(self, dbname):
+    def __init__(self):
         self.db = pymysql.connect(host = host,
                                   port = port,
                                   user = user,
                                   password=passwd,
-                                  db=dbname,
+                                  #db=dbname,
                                   charset=charset)
         self.cursor = self.db.cursor(pymysql.cursors.DictCursor)
  
