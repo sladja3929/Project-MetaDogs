@@ -16,6 +16,8 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         //playMode가 0이면 일상모드, 1이면 훈련모드 위치로 스폰
+        //playMode는 설정UI에서 모드 전환 누를 때마다 바뀜
+        //PlayerPrefs에 저장되기 때문에 훈련모드인 채로 게임 껐다 키면 훈련모드로 스폰됨
         if (PlayerPrefs.HasKey("playMode"))
         {
             if (PlayerPrefs.GetInt("playMode") == 0)
@@ -37,7 +39,7 @@ public class SpawnManager : MonoBehaviour
             }
         }
         else
-        {
+        {   //게임을 처음 켰으면 일상모드로 스폰
             PlayerPrefs.SetInt("playMode", 0);
             Player.instance.transform.position = playerSpawnPoints[0].position;
             Player.instance.transform.rotation = playerSpawnPoints[0].rotation;

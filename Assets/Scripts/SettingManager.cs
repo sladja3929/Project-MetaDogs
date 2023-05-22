@@ -24,24 +24,24 @@ public class SettingManager : MonoBehaviour
     }
 
     public void ToDailyMode()
-    {
+    {   //훈련모드로
         PlayerPrefs.SetInt("playMode", 0);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void ToTrainingMode()
-    {
+    {   //일상모드로
         PlayerPrefs.SetInt("playMode", 1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void ToPetSelect()
-    {
+    {   //펫 선택 모드로
         SceneManager.LoadScene("PetSelect");
     }
 
     public void ExitGame()
-    {
+    {   //종료
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

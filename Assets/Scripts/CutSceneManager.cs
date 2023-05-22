@@ -34,24 +34,35 @@ public class CutSceneManager : MonoBehaviour
 
     bool nextPage;
 
+    public RawImage[] fades = new RawImage[2];   //컷 신 넘어갈 때 페이드아웃 연출
+    public SkinnedMeshRenderer corgiMesh;   //펫 스킨 적용 대상
+
     // Start is called before the first frame update
     void Start()
     {
         timer = 0;
+        //펫 선택 화면에서 고른 강아지 스킨 가져옴
+        corgiMesh.materials[0].SetTexture("_BaseMap", PetSelectManager.instance.sampleNFTs[PetSelectManager.instance.petArrIdx].pet_color);
+        PetSelectManager.instance.DestroyThis();
 
+        StartCoroutine(FadeIn());    //페이드인
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {/*
         if (Input.GetKeyDown(KeyCode.S) && !prepare)
         {
             OnClickSelect();
-            /*
-            start = true;
-            text.enabled = true;
-            cam.GetComponent<Animator>().SetTrigger("start");
-            bars.Play();*/
+            
+            //start = true;
+            //text.enabled = true;
+            //cam.GetComponent<Animator>().SetTrigger("start");
+            //bars.Play();
+        }*/
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("SampleScene");
         }
     }
 
@@ -246,7 +257,7 @@ public class CutSceneManager : MonoBehaviour
     public IEnumerator CutSceneStart()
     {
         float timer = 0;
-        while (timer < 3f)
+        while (timer < 4f)
         {
             if (cam.fieldOfView != 0)
                 spinSpeed = 60 * 180 / cam.fieldOfView;
@@ -257,5 +268,16 @@ public class CutSceneManager : MonoBehaviour
         start = true;
         cam.GetComponent<Animator>().SetTrigger("start");
         bars.Play();
+    }
+
+    IEnumerator FadeIn()   //페이드아웃, 씬 전환
+    {
+        OnClickSelect();
+        while (fades[0].transform.localScale.x > 0)
+        {
+            fades[0].transform.localScale -= new Vector3(9 * Time.deltaTime, 0, 0);
+            fades[1].transform.localScale -= new Vector3(9 * Time.deltaTime, 0, 0);
+            yield return null;
+        }
     }
 }
