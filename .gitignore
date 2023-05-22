@@ -59,5 +59,5 @@ sysinfo.txt
 crashlytics-build.properties
 
 #python virtual files
-.venv/
-__pycache__/
+#.venv/
+#__pycache__/
