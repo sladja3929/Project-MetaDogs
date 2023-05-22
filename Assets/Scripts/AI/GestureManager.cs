@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum GestureType
+public enum BehaviorType
 {
     Undecided = -1,
     None,
@@ -31,29 +31,29 @@ public class GestureManager : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
     [SerializeField] [Range(100f, 10000f)] private float countPenalty = 3000f;
 
-    private readonly Dictionary<GestureType, List<Vector3>> dataSet = new();
+    private readonly Dictionary<BehaviorType, List<Vector3>> dataSet = new();
     private float errorRate = 0f;
     private bool isObserving = false;
     private bool isStopped = false;
     private bool isWorking = false;
 
     private int isAllowedChangingGesture = 0;
-    private GestureType gestureToDetect;
+    private BehaviorType givenBehavior;
     private ManagerMode mode = ManagerMode.None;
 
 
 
 
-    public GestureType CurrentType { private set; get; } = GestureType.None;
-    public void StartSensing(GestureType type)
+    public BehaviorType CurrentBehaviorType { private set; get; } = BehaviorType.None;
+    public void StartSensing(BehaviorType type)
     {
-        gestureToDetect = type;
-        CurrentType = type;
+        givenBehavior = type;
+        CurrentBehaviorType = type;
         mode = ManagerMode.Sensing;
     }
     public void StartValidate()
     {
-        CurrentType = GestureType.Undecided;
+        CurrentBehaviorType = BehaviorType.Undecided;
         mode = ManagerMode.Validating;
     }
 
@@ -68,7 +68,7 @@ public class GestureManager : MonoBehaviour
             {
                 isWorking = true;
                 resultText.text = "start";
-                StartCoroutine(AddGestureCoroutine(gestureToDetect));
+                StartCoroutine(AddGestureCoroutine(givenBehavior));
             }
         }
         else if (mode == ManagerMode.Validating)
@@ -88,7 +88,7 @@ public class GestureManager : MonoBehaviour
         }
     }
 
-    private IEnumerator AddGestureCoroutine(GestureType type)
+    private IEnumerator AddGestureCoroutine(BehaviorType type)
     {
         ObserveGesture(out var inputGesture);
         yield return new WaitUntil(() => !isObserving);
@@ -132,7 +132,7 @@ public class GestureManager : MonoBehaviour
         {
             if (IsMatched(curGesture, item.Key))
             {
-                CurrentType = item.Key;
+                CurrentBehaviorType = item.Key;
                 break;
             }
         }
@@ -140,7 +140,7 @@ public class GestureManager : MonoBehaviour
         isWorking = false;
     }
 
-    private bool IsMatched(List<Vector3> curGesture, GestureType type)
+    private bool IsMatched(List<Vector3> curGesture, BehaviorType type)
     {
         // Set long & short vector
         List<Vector3> longVec = curGesture;
