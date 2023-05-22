@@ -5,7 +5,7 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-from dbModule import Database, userdb
+from dbModule import Database
 
 UserDB = Namespace(
     name="UserDB",
@@ -63,7 +63,7 @@ class Load_Pet_Property(Resource):
         # Get JSON data from request
         data = request.get_json()
 
-        sql = "SELECT pet_name, pet_age, pet_sex FROM nft.pet WHERE pet_token=%s"
+        sql = "SELECT pet_name, pet_age, pet_sex, pet_texture FROM nft.pet WHERE pet_token=%s"
         row = db.executeOne(sql, data['pet_token'])
         
         if row is None:
@@ -88,7 +88,30 @@ class Test(Resource):
         #print(type(file))
 
         return "good"
+    
+@UserDB.route('/save_pet_property')
+class Save_Settings(Resource):
+    def post(self):
+        db = Database()
 
+        # Get data from request
+        pet_token = request.form['pet_token']
+        pet_name = request.form['pet_name']
+        pet_age = request.form['pet_age']
+        pet_sex = request.form['pet_sex']
+        pet_texture = request.files['pet_texture']
+            
+        if pet_texture:
+            sql = "UPDATE nft.pet \
+                SET pet_name=%s, pet_age=%s, pet_sex=%s, pet_texture=%s \
+                WHERE pet_token=%s" 
+            row = db.execute(sql, (pet_sex.read(), data))
+            db.commit()
+
+        print(data)
+
+        return "good"
+    
 @UserDB.route('/save_settings')
 class Save_Settings(Resource):
     def post(self):
