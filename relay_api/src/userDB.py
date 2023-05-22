@@ -63,7 +63,7 @@ class Load_Pet_Property(Resource):
         # Get JSON data from request
         data = request.get_json()
 
-        sql = "SELECT pet_name, pet_age, pet_sex, pet_texture FROM nft.pet WHERE pet_token=%s"
+        sql = "SELECT pet_name, pet_age, pet_sex, pet_emotion, pet_texture FROM nft.pet WHERE pet_token=%s"
         row = db.executeOne(sql, data['pet_token'])
         
         if row is None:
