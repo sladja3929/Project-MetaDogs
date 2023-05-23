@@ -7,11 +7,12 @@ public class TrainManager : MonoBehaviour
     public static TrainManager instance;
     public bool trainMode;
 
+    public GestureManager gestureManager;
+    private BehaviorType behaviorType;
+
     public float maxHamJudgeTime;
     public bool hamNoticed;
     public GameObject[] hitBoxes = new GameObject[6];
-
-    public Transform rHandTransform;
 
     public GameObject table;
 
@@ -64,21 +65,38 @@ public class TrainManager : MonoBehaviour
 
         hamNoticed = true;
         DogAnimator.instance.ActPose(i);
+        behaviorType = (BehaviorType)i;
     }
 
-    public void RecordStart()   //녹화 시작, 오민 '해 줘'
-    {   //펫이 포즈 취하고 이 자세가 맞습니까? 했을 때 네 하면 이 함수 실행
-        //rHandTransform이 오른손 transform 정보
+    public void RecordStart()   //녹화 시작
+    {
         DogAnimator.instance.trainUIAnimator.SetBool("appear", false);
         Player.instance.laser.SetActive(false);
-
+        gestureManager.StartSensing(behaviorType);
     }
 
-    public void RecordFin() //녹화 종료
+    public void RecordFin(bool didFeedHam, bool isNewGesture = false) //녹화 종료
     {
-
-        DogAnimator.instance.animator.SetBool("petEat", true); //냠냠 시작
+        DogAnimator.instance.animator.SetBool("petEat", didFeedHam);
         DogAnimator.instance.ActPose(-1);
+
+        if (didFeedHam)
+        {
+            if (isNewGesture)
+            {
+                // 서버에 behaviorType 보내기
+                // 기존에 폴더가 존재하면 삭제하기
+                // 동기로 .onnx 받아오기
+                // 제스처에 따른 강아지 행동 저장 (새로쓰기 or 덮어쓰기)
+            }
+            else
+            {
+                // 서버에 behaviorType 보내기
+                // 동기로 .onnx 받아오기
+                // 제스처에 따른 강아지 행동 저장 (덮어쓰기)
+            }
+        }
+        
     }
 
     public void Wrong() //아뇨 다른 자세 할게요

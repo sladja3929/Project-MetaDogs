@@ -6,12 +6,11 @@ using TMPro;
 public enum BehaviorType
 {
     Undecided = -1,
-    None,
-    SitDown,
     SitSide,
-    Lie,
-    Jump,
     Die,
+    Jump,
+    Lie,
+    SitDown,
     Attack,
 }
 
@@ -24,14 +23,14 @@ public class GestureManager : MonoBehaviour
         Validating,
     }
 
-    [SerializeField] private TextMeshProUGUI resultText;
-    [SerializeField] private TextMeshProUGUI countText;
+    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private GameObject gestureChangePanel;
     [SerializeField] private Transform target;
     [SerializeField] private float errorRatePerCount = 3750f;
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
     [SerializeField] [Range(100f, 10000f)] private float countPenalty = 3000f;
 
-    private readonly Dictionary<BehaviorType, List<Vector3>> dataSet = new();
+    private Dictionary<BehaviorType, List<Vector3>> dataSet;
     private float errorRate = 0f;
     private bool isObserving = false;
     private bool isStopped = false;
@@ -41,21 +40,47 @@ public class GestureManager : MonoBehaviour
     private BehaviorType givenBehavior;
     private ManagerMode mode = ManagerMode.None;
 
+    private void Awake()
+    {
+        text.gameObject.SetActive(false);
+        gestureChangePanel.SetActive(false);
+        SaveDataManager.Instance.LoadTrainingData(out dataSet);
+    }
+
+    private void UpdateData()
+    {
+        SaveDataManager.Instance.SaveTrainingData(dataSet);
+    }
 
 
-
-    public BehaviorType CurrentBehaviorType { private set; get; } = BehaviorType.None;
+    public BehaviorType CurrentBehaviorType { private set; get; } = BehaviorType.Undecided;
     public void StartSensing(BehaviorType type)
     {
+        text.gameObject.SetActive(true);
+        gestureChangePanel.SetActive(false);
+        text.SetText("오른손 A버튼으로 훈련 시작하기");
         givenBehavior = type;
         CurrentBehaviorType = type;
         mode = ManagerMode.Sensing;
     }
     public void StartValidate()
     {
+        text.gameObject.SetActive(true);
+        gestureChangePanel.SetActive(false);
+
+        if (dataSet.Count == 0)
+        {
+            text.SetText("제스처가 없어요..");
+            return;
+        }
+        text.SetText("오른손 A버튼으로 제스처 입력하기");
+
+
         CurrentBehaviorType = BehaviorType.Undecided;
         mode = ManagerMode.Validating;
     }
+
+
 
 
     void Update()
@@ -64,25 +89,23 @@ public class GestureManager : MonoBehaviour
 
         else if (mode == ManagerMode.Sensing)
         {
-            if (!isWorking && OVRInput.GetDown(OVRInput.Button.One))
+            if (!isWorking && (OVRInput.GetDown(OVRInput.Button.One) || Input.GetKeyDown(KeyCode.Z)))
             {
                 isWorking = true;
-                resultText.text = "start";
                 StartCoroutine(AddGestureCoroutine(givenBehavior));
             }
         }
         else if (mode == ManagerMode.Validating)
         {
-            if (!isWorking && OVRInput.GetDown(OVRInput.Button.Two))
+            if (!isWorking && OVRInput.GetDown(OVRInput.Button.One) || Input.GetKeyDown(KeyCode.Z))
             {
                 isWorking = true;
-                resultText.text = "validate start";
                 StartCoroutine(MatchGestureCoroutine());
             }
         }
 
         // 제스처 관찰 중지
-        if (isObserving && OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick))
+        if (isObserving && OVRInput.GetDown(OVRInput.Button.Two) || Input.GetKeyDown(KeyCode.X))
         {
             isStopped = true;
         }
@@ -92,31 +115,50 @@ public class GestureManager : MonoBehaviour
     {
         ObserveGesture(out var inputGesture);
         yield return new WaitUntil(() => !isObserving);
+        text.SetText("");
+        text.gameObject.SetActive(false);
 
         if (dataSet.ContainsKey(type))
         {
             // 기존 행동에 다른 제스처 감지 시
             if (!IsMatched(inputGesture, type))
             {
+                gestureChangePanel.SetActive(true);
+                Player.instance.laser.SetActive(true);
                 yield return new WaitUntil(() => isAllowedChangingGesture != 0);
+                gestureChangePanel.SetActive(false);
+                Player.instance.laser.SetActive(false);
 
                 // 제스처 변경을 허용했을 때, 기존 데이터 초기화
                 if (isAllowedChangingGesture == 1)
                 {
                     dataSet[type] = inputGesture;
+                    UpdateData();
+                    TrainManager.instance.RecordFin(true, true);
                 }
                 // 제스처 변경을 하지 않았을 때, 현재 입력 무시
                 else if (isAllowedChangingGesture == -1)
                 {
-
+                    isWorking = false;
+                    isAllowedChangingGesture = 0;
+                    StartSensing(givenBehavior);
+                    yield break;
                 }
                 isAllowedChangingGesture = 0;
+            }
+            // 기존 제스처 학습
+            else
+            {
+                TrainManager.instance.RecordFin(true, false);
             }
         }
         else
         {
             // 새로 제스처 추가
             dataSet[type] = inputGesture;
+            UpdateData();
+            TrainManager.instance.RecordFin(true, true);
+
         }
 
         mode = ManagerMode.None;
@@ -185,12 +227,10 @@ public class GestureManager : MonoBehaviour
 
         if (dirError > errorRate)
         {
-            resultText.text = "diff... | " + dirError + " / " + errorRate;
             return false;
         }
         else
         {
-            resultText.text = "correct!!: " + type.ToString() + " | " + dirError + " / " + errorRate;
             return true;
         }
     }
@@ -199,6 +239,7 @@ public class GestureManager : MonoBehaviour
     // 함수 마무리: isObserving == false
     private void ObserveGesture(out List<Vector3> newList)
     {
+        text.SetText("제스처 감지중...\n 오른손 A버튼으로 중지하기");
         newList = new();
         isObserving = true;
         StartCoroutine(ObserveGestureCoroutine(newList));
@@ -223,7 +264,7 @@ public class GestureManager : MonoBehaviour
             prevVec = endPos - startPos;
             if (isStopped)
             {
-                resultText.text = "Move More !!";
+                text.SetText("제스처가 너무 작습니다!\n 더 움직여주세요.");
             }
         } while (prevVec.magnitude < 0.1f);
         startPos = endPos;
@@ -252,8 +293,17 @@ public class GestureManager : MonoBehaviour
             }
             startPos = endPos;
         }
-        countText.text = $"{newList.Count}";
         errorRate = newList.Count * errorRatePerCount;
         isObserving = false;
+    }
+
+
+    public void OnClickChangeOK()
+    {
+        isAllowedChangingGesture = 1;
+    }
+    public void OnClickChangeNo()
+    {
+        isAllowedChangingGesture = -1;
     }
 }

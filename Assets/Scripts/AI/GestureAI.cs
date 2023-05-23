@@ -4,12 +4,9 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-using TMPro;
 
 public class GestureAI : Agent
 {
-    [SerializeField] private TextMeshProUGUI text;
-
     private int correctCount = 0;
     private int defaultCount = 0;
     private int ignoreCount = 0;
@@ -18,11 +15,11 @@ public class GestureAI : Agent
     private int totalCorrectCount = 0;
     private int totalDefaultCount = 0;
     private int totalIgnoreCount = 0;
-    private float correctAnswerRate = 0f;
+    public float CorrectAnswerRate { get; private set; } = 0f;
+    public int Decision { get; private set; } = -1;
 
     public override void Initialize()
     {
-        //GetComponent<DecisionRequester>().DecisionPeriod = Random.Range(5, 12);
     }
 
     // Branch 0 size = 3
@@ -39,8 +36,8 @@ public class GestureAI : Agent
             {
                 AddReward(10f);
                 ++totalCorrectCount;
-                correctAnswerRate = Mathf.Round(totalCorrectCount / (float)trainingCount * 10000f) * 0.01f;
-                text.SetText($"correct | {correctAnswerRate}%");
+                CorrectAnswerRate = Mathf.Round(totalCorrectCount / (float)trainingCount * 10000f) * 0.01f;
+                Decision = 0;
                 EndEpisode();
             }
         }
@@ -53,8 +50,8 @@ public class GestureAI : Agent
             {
                 AddReward(-10f);
                 ++totalDefaultCount;
-                correctAnswerRate = Mathf.Round(totalCorrectCount / (float)trainingCount * 10000f) * 0.01f;
-                text.SetText($"default | {correctAnswerRate}%");
+                CorrectAnswerRate = Mathf.Round(totalCorrectCount / (float)trainingCount * 10000f) * 0.01f;
+                Decision = 1;
                 EndEpisode();
             }
         }
@@ -67,8 +64,8 @@ public class GestureAI : Agent
             {
                 AddReward(-10f);
                 ++totalIgnoreCount;
-                correctAnswerRate = Mathf.Round(totalCorrectCount / (float)trainingCount * 10000f) * 0.01f;
-                text.SetText($"ignore | {correctAnswerRate}%");
+                CorrectAnswerRate = Mathf.Round(totalCorrectCount / (float)trainingCount * 10000f) * 0.01f;
+                Decision = 2;
                 EndEpisode();
             }
         }
@@ -81,12 +78,13 @@ public class GestureAI : Agent
         sensor.AddObservation(correctCount);
         sensor.AddObservation(ignoreCount);
         sensor.AddObservation(defaultCount);
-        sensor.AddObservation(correctAnswerRate);
+        sensor.AddObservation(CorrectAnswerRate);
     }
 
     public override void OnEpisodeBegin()
     {
         ++trainingCount;
+        Decision = -1;
         correctCount = 0;
         defaultCount = 0;
         ignoreCount = 0;
@@ -94,7 +92,7 @@ public class GestureAI : Agent
 
     private void OnDestroy()
     {
-        Debug.Log(correctAnswerRate);
+        Debug.Log(CorrectAnswerRate);
         Debug.Log("정답: " + totalCorrectCount);
         Debug.Log("기본: " + totalDefaultCount);
         Debug.Log("무시: " + totalIgnoreCount);
