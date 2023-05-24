@@ -1,6 +1,6 @@
-#host = 'metadogs-database' #도커 컨테이너를 네트워크로 묶고 컨테이너 이름을 호스트로 사용
-host = "203.250.148.33"
-port = 20306
+host = 'metadogs-database' #도커 컨테이너를 네트워크로 묶고 컨테이너 이름을 호스트로 사용
+#host = "203.250.148.33" #외부에서 돌릴 경우
+#port = 20306
 user = 'root'
 passwd = 'Mdogs*nklk*'
 userdb = 'user'
@@ -13,7 +13,7 @@ import pymysql
 class Database():
     def __init__(self):
         self.db = pymysql.connect(host = host,
-                                  port = port,
+                                  #port = port,
                                   user = user,
                                   password=passwd,
                                   #db=dbname,
