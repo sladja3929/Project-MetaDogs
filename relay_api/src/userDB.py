@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_restx import Resource, Api, Namespace
 import requests
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from io import BytesIO, StringIO
 
 from dbModule import Database
 
@@ -15,6 +17,7 @@ UserDB = Namespace(
 @UserDB.route('/load_pet_list')
 class Load_Pet_List(Resource):
     def post(self):
+        isFirst = 0
         db = Database()
         # Get JSON data from request
         data = request.get_json()
@@ -24,6 +27,7 @@ class Load_Pet_List(Resource):
         
         #user db에 지갑 주소가 없을 경우 (첫 접속)
         if row is None:
+            isFirst = 1
             sql = "INSERT INTO user.user(wallet_id, nickname) values(%s ,'a')"
             db.execute(sql, data['wallet_id'])
             db.commit()
@@ -39,7 +43,8 @@ class Load_Pet_List(Resource):
         if db.cursor.rowcount == 0:
             return -1
 
-        return row
+        row.insert(0, {'isFirst':isFirst})
+        return jsonify(row)
 
 @UserDB.route('/load_settings')
 class Load_Settings(Resource):
@@ -63,16 +68,38 @@ class Load_Pet_Property(Resource):
         # Get JSON data from request
         data = request.get_json()
 
-        sql = "SELECT pet_name, pet_age, pet_sex, pet_emotion, pet_texture FROM nft.pet WHERE pet_token=%s"
+        #db에서 가져오기
+        sql = "SELECT pet_name, pet_age, pet_sex, pet_emotion FROM nft.pet WHERE pet_token=%s"
         row = db.executeOne(sql, data['pet_token'])
-        
+
         if row is None:
             return "no data"
 
         return row
+    
+@UserDB.route('/load_pet_texture')
+class Load_Pet_Texture(Resource):
+    def post(self):
+        db = Database()
 
-@UserDB.route('/test')
-class Test(Resource):
+        # Get JSON data from request
+        data = request.get_json()
+
+        #db에서 가져오기
+        sql = "SELECT pet_texture FROM nft.pet WHERE pet_token=%s"
+        row = db.executeOne(sql, data['pet_token'])
+
+        file_stream = BytesIO(row['pet_texture'])
+        response = Response(
+            file_stream.getvalue(),
+            mimetype='image/png',
+            content_type='application/octet-stream'
+        )
+        response.headers["Content-Disposition"] = "attachment; filename=post_export.png"
+        return response
+
+@UserDB.route('/save_ai_model')
+class Save_AI_Model(Resource):
     def post(self):
         db = Database()
 
@@ -86,29 +113,6 @@ class Test(Resource):
             db.commit()
 
         #print(type(file))
-
-        return "good"
-    
-@UserDB.route('/save_pet_property')
-class Save_Settings(Resource):
-    def post(self):
-        db = Database()
-
-        # Get data from request
-        pet_token = request.form['pet_token']
-        pet_name = request.form['pet_name']
-        pet_age = request.form['pet_age']
-        pet_sex = request.form['pet_sex']
-        pet_texture = request.files['pet_texture']
-            
-        if pet_texture:
-            sql = "UPDATE nft.pet \
-                SET pet_name=%s, pet_age=%s, pet_sex=%s, pet_texture=%s \
-                WHERE pet_token=%s" 
-            row = db.execute(sql, (pet_sex.read(), data))
-            db.commit()
-
-        print(data)
 
         return "good"
     
@@ -129,3 +133,26 @@ class Save_Settings(Resource):
         print(data)
 
         return "good"
+    
+@UserDB.route('/save_pet_property')
+class Save_Pet_Property(Resource):
+    def post(self):
+        db = Database()
+
+        # Get data from request
+        pet_token = request.form['pet_token']
+        pet_name = request.form['pet_name']
+        pet_age = request.form['pet_age']
+        pet_sex = request.form['pet_sex']
+        pet_emotion = request.form['pet_emotion']
+        pet_texture = request.files['pet_texture']
+            
+        if pet_texture:
+            sql = "UPDATE nft.pet \
+                SET pet_name=%s, pet_age=%s, pet_sex=%s, pet_emotion=%s, pet_texture=%s \
+                WHERE pet_token=%s" 
+            row = db.execute(sql, (pet_name, pet_age, pet_sex, pet_emotion, pet_texture.read(), pet_token))
+            db.commit()
+
+        return "good"
+    
