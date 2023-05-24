@@ -30,7 +30,7 @@ public class GestureManager : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
     [SerializeField] [Range(100f, 10000f)] private float countPenalty = 3000f;
 
-    private Dictionary<BehaviorType, List<Vector3>> dataSet;
+    private Dictionary<BehaviorType, List<Vector3>> dataSet = new();
     private float errorRate = 0f;
     private bool isObserving = false;
     private bool isStopped = false;
@@ -44,12 +44,12 @@ public class GestureManager : MonoBehaviour
     {
         text.gameObject.SetActive(false);
         gestureChangePanel.SetActive(false);
-        SaveDataManager.Instance.LoadTrainingData(out dataSet);
+        //SaveDataManager.Instance.LoadTrainingData(out dataSet);
     }
 
     private void UpdateData()
     {
-        SaveDataManager.Instance.SaveTrainingData(dataSet);
+        //SaveDataManager.Instance.SaveTrainingData(dataSet);
     }
 
 
