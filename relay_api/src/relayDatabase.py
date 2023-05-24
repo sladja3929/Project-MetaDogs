@@ -108,18 +108,20 @@ class Load_AI_Model(Resource):
 
         # Get pet_token
         data = request.get_json()
+        model_int = f"model_{data['gesture_id']}"
 
         #db에서 가져오기
-        sql = "SELECT model FROM log.aimodel WHERE pet_token=%s"
+        sql = f"SELECT {model_int} FROM log.aimodel"
+        sql += " WHERE pet_token=%s"
         row = db.executeOne(sql, data['pet_token'])
 
-        file_stream = BytesIO(row['model'])
+        file_stream = BytesIO(row[model_int])
         response = Response(
             file_stream.getvalue(),
             mimetype='application/onnx',
             content_type='application/octet-stream'
         )
-        response.headers["Content-Disposition"] = "attachment; filename=model.onnx"
+        response.headers["Content-Disposition"] = f"attachment; filename=model{data['gesture_id']}.onnx"
 
         return response
     
@@ -169,9 +171,11 @@ class Save_AI_Model(Resource):
         # Get data from request
         model = request.files['model']
         pet_token = request.form['pet_token']
-            
+        gesture_id = request.form['gesture_id']
+
         if model:
-            sql = "UPDATE log.aimodel SET model=%s WHERE pet_token=%s" 
+            sql = f"UPDATE log.aimodel SET model_{gesture_id}"
+            sql += "=%s WHERE pet_token=%s" 
             row = db.execute(sql, (model.read(), pet_token))
             db.commit()
 
