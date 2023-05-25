@@ -49,7 +49,3 @@ public class SaveLoad
         return JsonUtility.FromJson<T>(jsonData);
     }
 }
-
-
-
-

@@ -16,7 +16,7 @@ public class GestureAI : Agent
     private int totalDefaultCount = 0;
     private int totalIgnoreCount = 0;
     public float CorrectAnswerRate { get; private set; } = 0f;
-    public int Decision { get; private set; } = -1;
+    public int Decision { get; set; } = -1;
 
     public override void Initialize()
     {
@@ -71,7 +71,6 @@ public class GestureAI : Agent
         }
     }
 
-
     // Space size = 4
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -84,7 +83,6 @@ public class GestureAI : Agent
     public override void OnEpisodeBegin()
     {
         ++trainingCount;
-        Decision = -1;
         correctCount = 0;
         defaultCount = 0;
         ignoreCount = 0;

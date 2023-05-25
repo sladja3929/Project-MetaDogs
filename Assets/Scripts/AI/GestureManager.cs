@@ -5,6 +5,7 @@ using TMPro;
 
 public enum BehaviorType
 {
+    None = -2,
     Undecided = -1,
     SitSide,
     Die,
@@ -30,7 +31,7 @@ public class GestureManager : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
     [SerializeField] [Range(100f, 10000f)] private float countPenalty = 3000f;
 
-    private Dictionary<BehaviorType, List<Vector3>> dataSet = new();
+    private Dictionary<BehaviorType, List<Vector3>> dataSet;
     private float errorRate = 0f;
     private bool isObserving = false;
     private bool isStopped = false;
@@ -44,12 +45,12 @@ public class GestureManager : MonoBehaviour
     {
         text.gameObject.SetActive(false);
         gestureChangePanel.SetActive(false);
-        //SaveDataManager.Instance.LoadTrainingData(out dataSet);
+        SaveDataManager.Instance.LoadTrainingData(out dataSet);
     }
 
     private void UpdateData()
     {
-        //SaveDataManager.Instance.SaveTrainingData(dataSet);
+        SaveDataManager.Instance.SaveTrainingData(dataSet);
     }
 
 
@@ -79,8 +80,6 @@ public class GestureManager : MonoBehaviour
         CurrentBehaviorType = BehaviorType.Undecided;
         mode = ManagerMode.Validating;
     }
-
-
 
 
     void Update()
@@ -154,11 +153,25 @@ public class GestureManager : MonoBehaviour
         }
         else
         {
+            // 이미 해당 제스처를 다른 제스처가 쓰고 있을 때 확인
+            foreach (var item in dataSet)
+            {
+                if (IsMatched(inputGesture, item.Key))
+                {
+                    isWorking = false;
+                    isAllowedChangingGesture = 0;
+                    text.SetText($"해당 제스처는 이미 {item.Key}가 사용중입니다!");
+                    yield return new WaitForSeconds(1f);
+
+                    StartSensing(givenBehavior);
+                    yield break;
+                }
+            }
+
             // 새로 제스처 추가
             dataSet[type] = inputGesture;
             UpdateData();
             TrainManager.instance.RecordFin(true, true);
-
         }
 
         mode = ManagerMode.None;
@@ -167,6 +180,7 @@ public class GestureManager : MonoBehaviour
 
     private IEnumerator MatchGestureCoroutine()
     {
+        DogAnimator.instance.animator.SetBool("dailyRecordStart", true);
         ObserveGesture(out var curGesture);
         yield return new WaitUntil(() => !isObserving);
 
@@ -175,10 +189,17 @@ public class GestureManager : MonoBehaviour
             if (IsMatched(curGesture, item.Key))
             {
                 CurrentBehaviorType = item.Key;
-                break;
+                isWorking = false;
+                text.SetText($"{CurrentBehaviorType} 가져오는 중");
+                mode = ManagerMode.None;
+                yield break;
             }
         }
 
+        text.SetText("일치하는 제스처가 없습니다!");
+        yield return new WaitForSeconds(1f);
+
+        CurrentBehaviorType = BehaviorType.None;
         isWorking = false;
     }
 
@@ -187,6 +208,8 @@ public class GestureManager : MonoBehaviour
         // Set long & short vector
         List<Vector3> longVec = curGesture;
         List<Vector3> shortVec = dataSet[type];
+        errorRate = shortVec.Count * errorRatePerCount;
+
         if (longVec.Count < shortVec.Count)
         {
             longVec = dataSet[type];
@@ -196,6 +219,7 @@ public class GestureManager : MonoBehaviour
         // Check Error
         float dirError = 0f;
         int shortIdx = 0;
+        Debug.Log("루프 카운트: " + longVec.Count);
         for (int longIdx = 0; longIdx < longVec.Count; ++longIdx)
         {
             // Cosine similarity를 이용해 MSE 계산
@@ -225,6 +249,8 @@ public class GestureManager : MonoBehaviour
             dirError += countPenalty;
         }
 
+        Debug.Log(type.ToString() + " | " + "목표 에러: " + errorRate + " | 에러율: " + dirError);
+
         if (dirError > errorRate)
         {
             return false;
@@ -250,7 +276,7 @@ public class GestureManager : MonoBehaviour
         var observeDelay = new WaitForSeconds(0.1f);
         var curveDelay = new WaitForSeconds(this.curveDelay);
 
-        Vector3 startPos = target.position;
+        Vector3 startPos = target.localPosition;
         Vector3 endPos;
         Vector3 prevVec;
 
@@ -260,7 +286,7 @@ public class GestureManager : MonoBehaviour
         do
         {
             yield return observeDelay;
-            endPos = target.position;
+            endPos = target.localPosition;
             prevVec = endPos - startPos;
             if (isStopped)
             {
@@ -273,13 +299,13 @@ public class GestureManager : MonoBehaviour
         while (!isStopped)
         {
             yield return observeDelay;
-            endPos = target.position;
+            endPos = target.localPosition;
             Vector3 diff = endPos - startPos;
             if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 15f)
             {
                 // 곡선 구간 무시
                 yield return curveDelay;
-                endPos = target.position;
+                endPos = target.localPosition;
                 diff = endPos - startPos;
                 if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 15f)
                 {
