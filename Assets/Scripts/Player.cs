@@ -69,15 +69,20 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) || OVRInput.GetDown(OVRInput.Button.Three))    //빈 손, 간식, 장난감 스왑
         {
-            if (!ham.activeSelf && !controller.activeSelf)
+            if (!TrainManager.instance.trainMode)
+                if (!ham.activeSelf && !controller.activeSelf)
+                    ham.SetActive(true);
+                else if (!controller.activeSelf)
+                {
+                    ham.SetActive(false);
+                    controller.SetActive(true);
+                }
+                else
+                    controller.SetActive(false);
+            else if (!ham.activeSelf)
                 ham.SetActive(true);
-            else if (!controller.activeSelf)
-            {
-                ham.SetActive(false);
-                controller.SetActive(true);
-            }
             else
-                controller.SetActive(false);
+                ham.SetActive(false);
         }
 
         /*if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Three))    //장난감 키기

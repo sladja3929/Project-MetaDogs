@@ -70,7 +70,7 @@ public class GestureManager : MonoBehaviour
 
         if (dataSet.Count == 0)
         {
-            text.SetText("제스처가 없어요..");
+            text.SetText("");
             return;
         }
         text.SetText("오른손 A버튼으로 제스처 입력하기");
