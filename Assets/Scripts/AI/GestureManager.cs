@@ -115,7 +115,7 @@ public class GestureManager : MonoBehaviour
         ObserveGesture(out var inputGesture);
         yield return new WaitUntil(() => !isObserving);
         text.SetText("");
-        text.gameObject.SetActive(false);
+        //text.gameObject.SetActive(false);
 
         if (dataSet.ContainsKey(type))
         {
@@ -161,6 +161,8 @@ public class GestureManager : MonoBehaviour
                     isWorking = false;
                     isAllowedChangingGesture = 0;
                     text.SetText($"해당 제스처는 이미 {item.Key}가 사용중입니다!");
+                    //text.text = "해당 제스처는 이미 " + item.Key.ToString() + "가 사용중입니다!";
+                    Debug.Log("나와!!!");
                     yield return new WaitForSeconds(1f);
 
                     StartSensing(givenBehavior);
@@ -180,7 +182,6 @@ public class GestureManager : MonoBehaviour
 
     private IEnumerator MatchGestureCoroutine()
     {
-        DogAnimator.instance.animator.SetBool("dailyRecordStart", true);
         ObserveGesture(out var curGesture);
         yield return new WaitUntil(() => !isObserving);
 

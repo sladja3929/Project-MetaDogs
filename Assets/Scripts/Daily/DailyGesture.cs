@@ -15,12 +15,15 @@ public class DailyGesture : MonoBehaviour
     {
         curCoroutine = DetectionCoroutine();
         StartCoroutine(curCoroutine);
+        DogAnimator.instance.animator.SetBool("dailyRecordStart", true);
     }
 
     private void OnDisable()
     {
         StopCoroutine(curCoroutine);
         DogAnimator.instance.animator.SetBool("dailyRecordStart", false);
+        if (DogAnimator.instance.animator.GetInteger("petPose") != -1)
+            DogAnimator.instance.animator.SetTrigger("loopEnd");
     }
 
     private IEnumerator DetectionCoroutine()
@@ -67,7 +70,7 @@ public class DailyGesture : MonoBehaviour
             }
 
             yield return new WaitForSeconds(3f);
-            DogAnimator.instance.animator.SetBool("loopEnd", true);
+            DogAnimator.instance.animator.SetTrigger("loopEnd");
         }
     }
 }
