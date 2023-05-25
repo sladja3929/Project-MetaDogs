@@ -8,6 +8,8 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     public AudioSource audioSource;
     public Slider soundSlider;
+
+    public AudioClip[] sounds;
     void Awake()
     {
         instance = this;
@@ -37,5 +39,10 @@ public class SoundManager : MonoBehaviour
     {
         slider.value--;
         slider.onValueChanged.Invoke(0);
+    }
+    public void ChangeMusic(int i)
+    {
+        audioSource.clip = sounds[i];
+        audioSource.Play();
     }
 }

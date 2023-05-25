@@ -67,21 +67,26 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E) || OVRInput.GetDown(OVRInput.Button.Three))    //간식 들기
+        if (Input.GetKeyDown(KeyCode.E) || OVRInput.GetDown(OVRInput.Button.Three))    //빈 손, 간식, 장난감 스왑
         {
-            if (!ham.activeSelf)
+            if (!ham.activeSelf && !controller.activeSelf)
                 ham.SetActive(true);
-            else
+            else if (!controller.activeSelf)
+            {
                 ham.SetActive(false);
+                controller.SetActive(true);
+            }
+            else
+                controller.SetActive(false);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Three))    //장난감 키기
+        /*if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Three))    //장난감 키기
         {
             if (!controller.activeSelf)
                 controller.SetActive(true);
             else
                 controller.SetActive(false);
-        }
+        }*/
     }
     void FixedUpdate()
     {
