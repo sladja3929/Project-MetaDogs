@@ -59,7 +59,7 @@ public class GestureManager : MonoBehaviour
     {
         text.gameObject.SetActive(true);
         gestureChangePanel.SetActive(false);
-        text.SetText("오른손 A버튼으로 훈련 시작하기");
+        text.SetText("오른손 A버튼으로\n훈련 시작하기");
         givenBehavior = type;
         CurrentBehaviorType = type;
         mode = ManagerMode.Sensing;
@@ -74,7 +74,7 @@ public class GestureManager : MonoBehaviour
             text.SetText("");
             return;
         }
-        text.SetText("오른손 A버튼으로 제스처 입력하기");
+        text.SetText("오른손 A버튼으로\n제스처 입력하기");
 
 
         CurrentBehaviorType = BehaviorType.Undecided;
@@ -182,6 +182,7 @@ public class GestureManager : MonoBehaviour
 
     private IEnumerator MatchGestureCoroutine()
     {
+        DogAnimator.instance.animator.ResetTrigger("loopEnd");
         ObserveGesture(out var curGesture);
         yield return new WaitUntil(() => !isObserving);
 
@@ -191,7 +192,7 @@ public class GestureManager : MonoBehaviour
             {
                 CurrentBehaviorType = item.Key;
                 isWorking = false;
-                text.SetText($"{CurrentBehaviorType} 가져오는 중");
+                text.SetText($"{CurrentBehaviorType}\n가져오는 중");
                 mode = ManagerMode.None;
                 yield break;
             }
@@ -272,7 +273,7 @@ public class GestureManager : MonoBehaviour
     // 함수 마무리: isObserving == false
     private void ObserveGesture(out List<Vector3> newList)
     {
-        text.SetText("제스처 감지중...\n 오른손 A버튼으로 중지하기");
+        text.SetText("제스처 감지중...\n오른손 A버튼으로 중지하기");
         newList = new();
         isObserving = true;
         StartCoroutine(ObserveGestureCoroutine(newList));
@@ -297,7 +298,7 @@ public class GestureManager : MonoBehaviour
             prevVec = endPos - startPos;
             if (isStopped)
             {
-                text.SetText("제스처가 너무 작습니다!\n 더 움직여주세요.");
+                text.SetText("제스처가 너무 작습니다!\n더 움직여주세요.");
             }
         } while (prevVec.magnitude < 0.1f);
         startPos = endPos;
@@ -338,5 +339,9 @@ public class GestureManager : MonoBehaviour
     public void OnClickChangeNo()
     {
         isAllowedChangingGesture = -1;
+    }
+    public void InitText()
+    {
+        text.gameObject.SetActive(false);
     }
 }

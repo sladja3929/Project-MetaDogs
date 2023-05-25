@@ -13,13 +13,15 @@ public class DailyGesture : MonoBehaviour
 
     private void OnEnable()
     {
+        DogAnimator.instance.animator.SetBool("dailyRecordStart", true);
+        //Debug.Log("왜 안나와!!!!!!!");
         curCoroutine = DetectionCoroutine();
         StartCoroutine(curCoroutine);
-        DogAnimator.instance.animator.SetBool("dailyRecordStart", true);
     }
 
     private void OnDisable()
     {
+        gestureManager.InitText();
         StopCoroutine(curCoroutine);
         DogAnimator.instance.animator.SetBool("dailyRecordStart", false);
         if (DogAnimator.instance.animator.GetInteger("petPose") != -1)
