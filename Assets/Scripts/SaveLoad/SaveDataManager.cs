@@ -4,13 +4,26 @@ using UnityEngine;
 using System;
 using System.IO;
 
-[System.Serializable]
+[Serializable]
+public class GestureVectorData
+{
+    public List<float> x;
+    public List<float> y;
+    public List<float> z;
+
+    public GestureVectorData (List<float> x, List<float> y, List<float> z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
+[Serializable]
 public class TrainingData
 {
     public List<int> behavior;
-    public List<List<float>> gestureX;
-    public List<List<float>> gestureY;
-    public List<List<float>> gestureZ;
+    public List<GestureVectorData> gesture;
 }
 
 public class SaveDataManager : Singleton<SaveDataManager>
@@ -22,52 +35,46 @@ public class SaveDataManager : Singleton<SaveDataManager>
 
         int i = 0;
         trainingData.behavior = new(saveData.Count);
-        trainingData.gestureX = new(saveData.Count);
-        trainingData.gestureY = new(saveData.Count);
-        trainingData.gestureZ = new(saveData.Count);
+        trainingData.gesture = new(saveData.Count);
         foreach (KeyValuePair<BehaviorType, List<Vector3>> item in saveData)
         {
             trainingData.behavior.Add((int)item.Key);
-            trainingData.gestureX.Add(new List<float>(item.Value.Count));
-            trainingData.gestureY.Add(new List<float>(item.Value.Count));
-            trainingData.gestureZ.Add(new List<float>(item.Value.Count));
+
+            List<float> x = new(item.Value.Count);
+            List<float> y = new(item.Value.Count);
+            List<float> z = new(item.Value.Count);
             for (int j = 0; j < item.Value.Count; ++j)
             {
-                trainingData.gestureX[i].Add(item.Value[j].x);
-                trainingData.gestureY[i].Add(item.Value[j].y);
-                trainingData.gestureZ[i].Add(item.Value[j].z);
+                x.Add(item.Value[j].x);
+                y.Add(item.Value[j].y);
+                z.Add(item.Value[j].z);
             }
 
-            Debug.Log(trainingData.behavior[i] + "저장");
+            trainingData.gesture.Add(new GestureVectorData(x, y, z));
+
             ++i;
         }
 
         var textdata = SaveLoad.ObjectToJson(trainingData);
-        var AEStextdata = AES256.Encrypt256(textdata, "aes256=32CharA49AScdg5135=48Fk63");
-
-        SaveLoad.CreateJsonFile(Application.streamingAssetsPath, "TrainingData", AEStextdata);
+        //var AEStextdata = AES256.Encrypt256(textdata, "aes256=32CharA49AScdg5135=48Fk63");
+        SaveLoad.CreateJsonFile(Application.streamingAssetsPath, "TrainingData", textdata);
     }
 
     public void LoadTrainingData(out Dictionary<BehaviorType, List<Vector3>> loadData)
     {
         try
         {
-            Debug.Log("불러오기");
-            var data = SaveLoad.LoadJsonFileAES<TrainingData>(Application.streamingAssetsPath, "TrainingData", "aes256=32CharA49AScdg5135=48Fk63");
-            loadData = new(data.behavior.Count);
-            Debug.Log($"{data.behavior.Count}");
-
+            var data = SaveLoad.LoadJsonFile<TrainingData>(Application.streamingAssetsPath, "TrainingData");
+            
+            loadData = new();
             for (int i = 0; i < data.behavior.Count; ++i)
             {
                 List<Vector3> gesture = new();
-                Debug.Log($"{data.gestureX.Count}");
-                Debug.Log($"{data.gestureX[0].Count}");
-                for (int j = 0; j < data.gestureX[i].Count; ++j)
+                for (int j = 0; j < data.gesture[i].x.Count; ++j)
                 {
-                    gesture.Add(new(data.gestureX[i][j], data.gestureY[i][j], data.gestureZ[i][j]));
+                    gesture.Add(new(data.gesture[i].x[j], data.gesture[i].y[j], data.gesture[i].z[j]));
                 }
                 loadData[(BehaviorType)data.behavior[i]] = gesture;
-                Debug.Log($"{loadData[(BehaviorType)data.behavior[i]]}");
             }
         }
         catch (IOException e)

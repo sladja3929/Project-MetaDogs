@@ -345,7 +345,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &501854634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,7 +376,6 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
-  text: {fileID: 715582797}
 --- !u!114 &501854636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2288,8 +2287,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4681934e4c0824783cda015dfa4533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resultText: {fileID: 721639030}
-  countText: {fileID: 969499546}
+  text: {fileID: 0}
+  gestureChangePanel: {fileID: 0}
   target: {fileID: 1362138640}
   errorRatePerCount: 3750
   curveDelay: 0.15

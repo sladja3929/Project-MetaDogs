@@ -8,7 +8,6 @@ public class DailyGesture : MonoBehaviour
 {
     [SerializeField] private GestureManager gestureManager;
     [SerializeField] private GestureAI ai;
-    [SerializeField] private BehaviorParameters param;
 
     private IEnumerator curCoroutine;
 
@@ -21,6 +20,7 @@ public class DailyGesture : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(curCoroutine);
+        DogAnimator.instance.animator.SetBool("dailyRecordStart", false);
     }
 
     private IEnumerator DetectionCoroutine()
@@ -32,31 +32,42 @@ public class DailyGesture : MonoBehaviour
 
             var behavior = gestureManager.CurrentBehaviorType;
 
+            if (behavior == BehaviorType.None)  // 해당 제스처가 없으면 무시
+            {
+                DogAnimator.instance.animator.SetInteger("petPose", -1);
+                continue;
+            }
 
             // 서버에서 해당 행동에 대한 .onnx파일을 가져와야 함.
             // param.Model = 
 
+            ai.Decision = -1;
+            int count = 0;
+            while (ai.Decision == -1)
+            {
+                ai.RequestDecision();
+                yield return Time.fixedDeltaTime;
+                ++count;
+                if (count > 100) break;
+            }
 
-            ai.enabled = true;
-            yield return new WaitUntil(() => ai.Decision != -1);
-            ai.EndEpisode();
-            ai.enabled = false;
-
+            Debug.Log(ai.Decision);
             if (ai.Decision == 0)   // 정답
             {
-                DogAnimator.instance.ActPose((int)behavior);
+                DogAnimator.instance.animator.SetInteger("petPose", (int)behavior);
+                Debug.Log(behavior.ToString());
             }
             else if (ai.Decision == 1)  // 기본 행동 (갸우뚱?)
             {
-                DogAnimator.instance.ActPose(-1);
+                DogAnimator.instance.animator.SetInteger("petPose", -1);
             }
             else // 무시
             {
-                DogAnimator.instance.ActPose(-1);
+                DogAnimator.instance.animator.SetInteger("petPose", -1);
             }
 
-            yield return new WaitForSeconds(1f);
-            ai.enabled = false;
+            yield return new WaitForSeconds(3f);
+            DogAnimator.instance.animator.SetBool("loopEnd", true);
         }
     }
 }
