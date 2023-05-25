@@ -240,14 +240,7 @@ public class GestureManager : MonoBehaviour
             }
             else
             {
-                if (curError < 0.01f)
-                {
-                    dirError += countPenalty;
-                }
-                else
-                {
-                    dirError += curError;
-                }
+                dirError += curError;
             }
         }
 
@@ -323,7 +316,7 @@ public class GestureManager : MonoBehaviour
             }
             else
             {
-                newList[^1] = newList[^1].normalized * diff.magnitude;
+                newList[^1] += newList[^1].normalized * diff.magnitude;
             }
             startPos = endPos;
         }
