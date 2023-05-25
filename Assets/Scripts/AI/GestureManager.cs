@@ -220,7 +220,6 @@ public class GestureManager : MonoBehaviour
         // Check Error
         float dirError = 0f;
         int shortIdx = 0;
-        Debug.Log("루프 카운트: " + longVec.Count);
         for (int longIdx = 0; longIdx < longVec.Count; ++longIdx)
         {
             // Cosine similarity를 이용해 MSE 계산
@@ -240,7 +239,14 @@ public class GestureManager : MonoBehaviour
             }
             else
             {
-                dirError += curError;
+                if (curError < 0.01f)
+                {
+                    dirError += countPenalty;
+                }
+                else
+                {
+                    dirError += curError;
+                }
             }
         }
 
