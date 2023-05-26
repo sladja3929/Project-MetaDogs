@@ -10,7 +10,7 @@ MLAgent = Namespace(
 )
 
 env_path = "/mlagent/Project-MetaDogs/Linux-build/AITest.x86_64"
-model_name = "AItest"
+model_name = "AITest"
 model_path = f"/mlagent/{model_name}.yaml"
 result_path = "/mlagent/usr_model"
 #오닉스 이름: yaml파일과 동일
@@ -28,7 +28,7 @@ class Create_Model(Resource):
         system_return = os.system(cmd)
 
         #첫 학습
-        cmd = f"mlagents-learn {model_path} --run-id={run_id} --env={env_path} --no-graphics"
+        cmd = f"r"
         system_return = os.system(cmd)
 
         #오닉스 db에 저장
