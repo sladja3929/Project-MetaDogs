@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
                 ham.SetActive(false);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Two))    //장난감 키기
+        if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Four))    //장난감 키기
         {
             if (!controller.activeSelf)
                 controller.SetActive(true);

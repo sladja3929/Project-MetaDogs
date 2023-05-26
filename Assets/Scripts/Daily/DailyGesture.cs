@@ -44,7 +44,6 @@ public class DailyGesture : MonoBehaviour
             }
 
             // 서버에서 해당 행동에 대한 .onnx파일을 가져와야 함.
-            // param.Model = 
 
             ai.Decision = -1;
             while (ai.Decision == -1)

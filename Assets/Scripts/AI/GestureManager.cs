@@ -30,7 +30,6 @@ public class GestureManager : MonoBehaviour
     [SerializeField] private Transform target;
 
     [Header("제스처 인식 설정")]
-    [SerializeField] [Range(25f, 180f)] private float dirErrorAngle = 45f;
     [SerializeField] [Range(0f, 45f)] private float penaltyAngle = 15f;
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
     [SerializeField] [Range(0.1f, 20f)] private float shakingCorrectionAngle = 10f;
@@ -120,61 +119,80 @@ public class GestureManager : MonoBehaviour
         text.SetText("");
         //text.gameObject.SetActive(false);
 
+        // 기존 학습 데이터가 있다면
         if (dataSet.ContainsKey(type))
         {
-            // 기존 행동에 다른 제스처 감지 시
-            if (!IsMatched(inputGesture, type))
+            // 기존 제스처와 일치하면 학습 완료
+            if (IsMatched(inputGesture, type) < 1f)
             {
-                gestureChangePanel.SetActive(true);
-                Player.instance.laser.SetActive(true);
-                yield return new WaitUntil(() => isAllowedChangingGesture != 0);
-                gestureChangePanel.SetActive(false);
-                Player.instance.laser.SetActive(false);
+                TrainManager.instance.RecordFin(true, false);
+            }
+            // 다른 제스처 감지 시
+            else
+            {
+                BehaviorType resultType = MatchAllGesture(inputGesture);
 
-                // 제스처 변경을 허용했을 때, 기존 데이터 초기화
-                if (isAllowedChangingGesture == 1)
+                // 처음 보는 제스처라면, 제스처 변경을 할 것인지 묻는다.
+                if (resultType == BehaviorType.Undecided)
                 {
-                    dataSet[type] = inputGesture;
-                    UpdateData();
-                    TrainManager.instance.RecordFin(true, true);
+                    gestureChangePanel.SetActive(true);
+                    Player.instance.laser.SetActive(true);
+                    yield return new WaitUntil(() => isAllowedChangingGesture != 0);
+                    gestureChangePanel.SetActive(false);
+                    Player.instance.laser.SetActive(false);
+
+                    // 제스처 변경을 허용했을 때, 기존 데이터 초기화
+                    if (isAllowedChangingGesture == 1)
+                    {
+                        isAllowedChangingGesture = 0;
+                        dataSet[type] = inputGesture;
+                        UpdateData();
+                        TrainManager.instance.RecordFin(true, true);
+                    }
+                    // 제스처 변경을 하지 않았을 때, 현재 입력 무시
+                    else if (isAllowedChangingGesture == -1)
+                    {
+                        isWorking = false;
+                        isAllowedChangingGesture = 0;
+                        StartSensing(givenBehavior);
+                        yield break;
+                    }
                 }
-                // 제스처 변경을 하지 않았을 때, 현재 입력 무시
-                else if (isAllowedChangingGesture == -1)
+                // 다른 행동이 이미 쓰고 있는 동작이라면 무시
+                else
                 {
                     isWorking = false;
                     isAllowedChangingGesture = 0;
+                    text.SetText($"해당 제스처는 {resultType}와 유사합니다!");
+                    yield return new WaitForSeconds(2f);
+
                     StartSensing(givenBehavior);
                     yield break;
                 }
-                isAllowedChangingGesture = 0;
-            }
-            // 기존 제스처 학습
-            else
-            {
-                TrainManager.instance.RecordFin(true, false);
             }
         }
         else
         {
-            // 이미 해당 제스처를 다른 제스처가 쓰고 있을 때 확인
-            foreach (var item in dataSet)
-            {
-                if (IsMatched(inputGesture, item.Key))
-                {
-                    isWorking = false;
-                    isAllowedChangingGesture = 0;
-                    text.SetText($"해당 제스처는 이미 {item.Key}가 사용중입니다!");
-                    yield return new WaitForSeconds(1f);
-
-                    StartSensing(givenBehavior);
-                    yield break;
-                }
-            }
+            BehaviorType resultType = MatchAllGesture(inputGesture);
 
             // 새로 제스처 추가
-            dataSet[type] = inputGesture;
-            UpdateData();
-            TrainManager.instance.RecordFin(true, true);
+            if (resultType == BehaviorType.Undecided)
+            {
+                dataSet[type] = inputGesture;
+                UpdateData();
+                TrainManager.instance.RecordFin(true, true);
+            }
+            //  다른 행동이 해당 제스처를 쓰고 있다면 무시
+            else
+            {
+                isWorking = false;
+                isAllowedChangingGesture = 0;
+                text.SetText($"해당 제스처는 {resultType}와 유사합니다!");
+                yield return new WaitForSeconds(2f);
+
+                StartSensing(givenBehavior);
+                yield break;
+            }
         }
 
         mode = ManagerMode.None;
@@ -187,26 +205,40 @@ public class GestureManager : MonoBehaviour
         ObserveGesture(out var curGesture);
         yield return new WaitUntil(() => !isObserving);
 
-        foreach(var item in dataSet)
+        BehaviorType resultType = MatchAllGesture(curGesture);
+
+        if (resultType == BehaviorType.Undecided)
         {
-            if (IsMatched(curGesture, item.Key))
-            {
-                CurrentBehaviorType = item.Key;
-                isWorking = false;
-                text.SetText($"{CurrentBehaviorType}\n가져오는 중");
-                mode = ManagerMode.None;
-                yield break;
-            }
+            text.SetText("일치하는 제스처가 없습니다!");
+            yield return new WaitForSeconds(1f);
+            CurrentBehaviorType = BehaviorType.None;
         }
-
-        text.SetText("일치하는 제스처가 없습니다!");
-        yield return new WaitForSeconds(1f);
-
-        CurrentBehaviorType = BehaviorType.None;
+        else
+        {
+            CurrentBehaviorType = resultType;
+            text.SetText($"{CurrentBehaviorType}\n가져오는 중");
+            mode = ManagerMode.None;
+        }
         isWorking = false;
     }
 
-    private bool IsMatched(List<Vector3> curGesture, BehaviorType type)
+    private BehaviorType MatchAllGesture(List<Vector3> gesture)
+    {
+        float minError = float.MaxValue;
+        BehaviorType resultType = BehaviorType.Undecided;
+        foreach (var item in dataSet)
+        {
+            float curError = IsMatched(gesture, item.Key);
+            if (curError < 1f && curError < minError)
+            {
+                minError = curError;
+                resultType = item.Key;
+            }
+        }
+        return resultType;
+    }
+
+    private float IsMatched(List<Vector3> curGesture, BehaviorType type)
     {
         // Set long & short vector
         List<Vector3> longVec = curGesture;
@@ -217,6 +249,9 @@ public class GestureManager : MonoBehaviour
             longVec = dataSet[type];
             shortVec = curGesture;
         }
+
+        if (longVec.Count - shortVec.Count > 4) return float.MaxValue;
+
 
         // Check Error
         float gestureError = 0f;
@@ -255,8 +290,11 @@ public class GestureManager : MonoBehaviour
 
         gestureError /= totalCount;
 
-        Debug.Log($"행동: {type} | {gestureError} / {dirErrorAngle}");
-        return gestureError < dirErrorAngle;
+        // [10, 55) 범위를 단조증가하는 함수
+        float dirError = -45 * Mathf.Exp(-0.15f * totalCount) + 55;
+
+        Debug.Log($"행동: {type} | {Mathf.Round(gestureError)} / {Mathf.Round(dirError)}");
+        return gestureError / dirError;
     }
 
 
@@ -300,13 +338,13 @@ public class GestureManager : MonoBehaviour
             endPos = target.localPosition;
             Vector3 diff = endPos - startPos;
 
-            // 떨림 보정 10도
-            if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 10f)
+            // 떨림, 곡선 보정
+            if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > shakingCorrectionAngle)
             {
                 yield return curveDelay;
                 endPos = target.localPosition;
                 diff = endPos - startPos;
-                if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 10f)
+                if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > shakingCorrectionAngle)
                 {
                     newList.Add(diff);
                     prevVec = diff;
