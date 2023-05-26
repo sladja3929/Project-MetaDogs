@@ -5,7 +5,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
 #host="203.250.148.33:20080" #외부에서 돌릴 경우
-host="metadogs-relay-api" #도커 컨테이너를 네트워크로 묶고 컨테이너 이름을 호스트로 사용
+host="https://metadogs-relay-api" #도커 컨테이너를 네트워크로 묶고 컨테이너 이름을 호스트로 사용
 save_ai_model = "/db/save_ai_model"
 
 def SyncModelToDB(pet_token, gesture_id, file_path):
