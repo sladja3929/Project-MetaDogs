@@ -13,7 +13,7 @@ import pymysql
 class Database():
     def __init__(self):
         self.db = pymysql.connect(host = host,
-                                  port = port,
+                                  #port = port,
                                   user = user,
                                   password=passwd,
                                   #db=dbname,

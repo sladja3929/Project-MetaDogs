@@ -18,5 +18,24 @@ def SyncModelToDB(pet_token, gesture_id, file_path):
         }
     )
 
+    retries = 3
+    backoff_factor = 0.3
+    status_forcelist = (500, 400)
+    
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=status_forcelist
+    )
+
+    session = requests.Session()
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+
+    response = session.post(host+save_ai_model, data=m, headers={'Content-Type': m.content_type}, timeout=3)
+    
     #relay api에 전송
-    r = requests.post(host+save_ai_model, data=m, headers={'Content-Type': m.content_type})
+    #r = requests.post(host+save_ai_model, data=m, headers={'Content-Type': m.content_type})
