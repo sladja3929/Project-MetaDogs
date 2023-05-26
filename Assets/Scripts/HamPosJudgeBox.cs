@@ -20,6 +20,8 @@ public class HamPosJudgeBox : MonoBehaviour
     {
         if (!TrainManager.instance.trainMode) return;
 
+        if (!TrainManager.instance.petPosesEnabled[boxNum]) return;
+
         if (TrainManager.instance.hamNoticed)
         {
             entered = false;

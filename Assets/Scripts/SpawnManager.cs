@@ -5,6 +5,10 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager instance;
+
+    public SkinnedMeshRenderer corgiMesh;
+    public GameObject autoToy;
+
     public Transform[] playerSpawnPoints = new Transform[2];
     public Transform[] petSpawnPoints = new Transform[2];
 
@@ -14,6 +18,21 @@ public class SpawnManager : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start()
+    {
+        if (GameObject.Find("NftManager"))
+            NftManager.instance.NftSetting();
+        PositionSetting();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    
+
+    public void PositionSetting()
     {
         //playMode가 0이면 일상모드, 1이면 훈련모드 위치로 스폰
         //playMode는 설정UI에서 모드 전환 누를 때마다 바뀜
@@ -46,11 +65,5 @@ public class SpawnManager : MonoBehaviour
             DogAnimator.instance.gameObject.transform.position = petSpawnPoints[0].position;
             DogAnimator.instance.gameObject.transform.rotation = petSpawnPoints[0].rotation;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

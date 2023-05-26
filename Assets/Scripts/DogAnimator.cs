@@ -7,7 +7,6 @@ public class DogAnimator : MonoBehaviour
 {
     public static DogAnimator instance;
     public Animator animator;
-    public bool[] petPosesEnabled = new bool[6];
 
     /*
     [0] Crouch

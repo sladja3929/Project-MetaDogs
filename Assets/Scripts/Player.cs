@@ -75,13 +75,14 @@ public class Player : MonoBehaviour
                 ham.SetActive(false);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Four))    //장난감 키기
-        {
-            if (!controller.activeSelf)
-                controller.SetActive(true);
-            else
-                controller.SetActive(false);
-        }
+        if (DogMove.instance.toy.gameObject.activeSelf)
+            if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Four))    //장난감 키기
+            {
+                if (!controller.activeSelf)
+                    controller.SetActive(true);
+                else
+                    controller.SetActive(false);
+            }
     }
     void FixedUpdate()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-
+/*
 [System.Serializable]
 public class PetNFT
 {
@@ -16,11 +16,13 @@ public class PetNFT
     public Texture pet_color;
     //model: onnx 파일
     //property: yaml 파일
-};
+};*/
 
 public class PetSelectManager : MonoBehaviour
 {
     public static PetSelectManager instance;
+    NftManager nftManager;
+    
     public string sampleWallet_i;   //wallet id를 전달받았다 가정
 
     public PetNFT[] sampleNFTs; //n개의 nft 파일을 전달받았다 가정, 인스펙터창에서 수정 가능
@@ -34,8 +36,9 @@ public class PetSelectManager : MonoBehaviour
 
     public RawImage[] fades = new RawImage[2];   //컷 신 넘어갈 때 페이드아웃 연출
     public AudioSource audioSource; //배경음
-    
 
+    public TextMeshProUGUI nftDlc;
+    public GameObject[] nftUIs;
 
 
     private void Awake()
@@ -45,6 +48,50 @@ public class PetSelectManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        nftManager = NftManager.instance;
+
+        if (PlayerPrefs.HasKey("devLogin"))
+            if (PlayerPrefs.GetInt("devLogin") == 1)
+            {   
+                //개발자 로그인일 경우 샘플 NFT들을 NftManager에 저장
+                nftManager.nftList = new PetNFT[sampleNFTs.Length];
+                for (int i = 0; i < sampleNFTs.Length; i++)
+                    nftManager.nftList[i] = sampleNFTs[i];
+
+                //훈련비법서, 장난감도 모두 개방
+                nftManager.jumpScroll = true;
+                nftManager.attackScroll = true;
+                nftManager.autoToy = true;
+            }
+            else
+            {
+                /*
+                일반 로그인일 경우
+                서버 NFT들을 NftManager에 저장
+                */
+            }
+        else
+        { 
+            //개발자 로그인일 경우 샘플 NFT들을 NftManager에 저장
+            PlayerPrefs.SetInt("devLogin", 1);
+            nftManager.nftList = new PetNFT[sampleNFTs.Length];
+            for (int i = 0; i < sampleNFTs.Length; i++)
+                nftManager.nftList[i] = sampleNFTs[i];
+            
+            //훈련비법서, 장난감도 모두 개방
+            nftManager.jumpScroll = true;
+            nftManager.attackScroll = true;
+            nftManager.autoToy = true;
+        }
+
+        if (nftManager.attackScroll)
+            nftUIs[0].SetActive(true);
+        if (nftManager.jumpScroll)
+            nftUIs[1].SetActive(true);
+        if (nftManager.autoToy)
+            nftUIs[2].SetActive(true);
+
+
         PetChange();
     }
 
@@ -56,21 +103,21 @@ public class PetSelectManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
             NextPet();
         if (Input.GetKeyDown(KeyCode.Space))
-            PetSelect();
+            OnClickPetSelect();
     }
 
     public void PetChange() //펫 텍스처 변경, 클립보드의 텍스트 변경
     {
-        corgiMesh.materials[0].SetTexture("_BaseMap", sampleNFTs[petArrIdx].pet_color);
+        corgiMesh.materials[0].SetTexture("_BaseMap", nftManager.nftList[petArrIdx].pet_color);
 
-        boyuPet.text = "보유 펫 " + (petArrIdx + 1) + "/" + sampleNFTs.Length;
-        nftId.text = "펫 NFT ID\n" + sampleNFTs[petArrIdx].pet_token;
-        petName.text = "이름: " + sampleNFTs[petArrIdx].pet_name;
-        age.text = "나이: " + sampleNFTs[petArrIdx].pet_age + "months";
+        boyuPet.text = "보유 펫 " + (petArrIdx + 1) + "/" + nftManager.nftList.Length;
+        nftId.text = "펫 NFT ID\n" + nftManager.nftList[petArrIdx].pet_token;
+        petName.text = "이름: " + nftManager.nftList[petArrIdx].pet_name;
+        age.text = "나이: " + nftManager.nftList[petArrIdx].pet_age + "months";
 
-        if (sampleNFTs[petArrIdx].pet_sex == "f")
+        if (nftManager.nftList[petArrIdx].pet_sex == "f")
             gender.text = "성별: ♀";
-        else if (sampleNFTs[petArrIdx].pet_sex == "m")
+        else if (nftManager.nftList[petArrIdx].pet_sex == "m")
             gender.text = "성별: ♂";
         else
             gender.text = "성별: ?";
@@ -80,18 +127,19 @@ public class PetSelectManager : MonoBehaviour
     {
         petArrIdx--;
         if (petArrIdx < 0)
-            petArrIdx += sampleNFTs.Length;
+            petArrIdx += nftManager.nftList.Length;
         PetChange();
     }
     public void NextPet()   //펫 목록 한 칸 뒤로 이동
     {
         petArrIdx++;
-        if (petArrIdx >= sampleNFTs.Length)
-            petArrIdx -= sampleNFTs.Length;
+        if (petArrIdx >= nftManager.nftList.Length)
+            petArrIdx -= nftManager.nftList.Length;
         PetChange();
     }
-    public void PetSelect() //펫 선택
+    public void OnClickPetSelect() //펫 선택
     {
+        nftManager.selected = nftManager.nftList[petArrIdx];
         StartCoroutine(FadeOut());
     }
 

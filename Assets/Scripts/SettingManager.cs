@@ -37,6 +37,8 @@ public class SettingManager : MonoBehaviour
 
     public void ToPetSelect()
     {   //펫 선택 모드로
+        if (GameObject.Find("NftManager"))
+            NftManager.instance.DestroyThis();
         SceneManager.LoadScene("PetSelect");
     }
     public void Save()

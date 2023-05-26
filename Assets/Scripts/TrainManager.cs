@@ -12,6 +12,8 @@ public class TrainManager : MonoBehaviour
 
     public float maxHamJudgeTime;
     public bool hamNoticed;
+
+    public bool[] petPosesEnabled = new bool[6];
     public GameObject[] hitBoxes = new GameObject[6];
 
     public GameObject table;
