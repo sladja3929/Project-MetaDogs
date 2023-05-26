@@ -28,7 +28,7 @@ class Create_Model(Resource):
         system_return = os.system(cmd)
 
         #첫 학습
-        cmd = f"r"
+        cmd = f"mlagents-learn {model_path} --run-id={run_id} --env={env_path} --no-graphics"
         system_return = os.system(cmd)
 
         #오닉스 db에 저장
