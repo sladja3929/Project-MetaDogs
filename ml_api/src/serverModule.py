@@ -13,7 +13,7 @@ def SyncModelToDB(pet_token, gesture_id, file_path):
     m = MultipartEncoder(
         fields={
             'pet_token': pet_token,
-            'gesture_id': gesture_id,
+            'gesture_id': str(gesture_id),
             'model': (f"model_{gesture_id}", open(file_path, 'rb'), 'application/onnx')
         }
     )
