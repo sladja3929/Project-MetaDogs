@@ -3,7 +3,7 @@
 from flask import Flask
 from flask_restx import Resource, Api
 
-from mlagent import MLAgent
+from mlAgent import MLAgent
 
 app = Flask(__name__)
 api = Api(app)
