@@ -46,11 +46,13 @@ public class DailyGesture : MonoBehaviour
             // 서버에서 해당 행동에 대한 .onnx파일을 가져와야 함.
 
             ai.Decision = -1;
+            ai.IsStart = true;
             while (ai.Decision == -1)
             {
                 ai.RequestDecision();
                 yield return Time.fixedDeltaTime;
             }
+            ai.IsStart = false;
 
             Debug.Log(ai.Decision);
             if (ai.Decision == 0)   // 정답
@@ -60,10 +62,12 @@ public class DailyGesture : MonoBehaviour
             }
             else if (ai.Decision == 1)  // 기본 행동 (갸우뚱?)
             {
+                gestureManager.SetTextUnrecognizable();
                 DogAnimator.instance.animator.SetInteger("petPose", -1);
             }
             else // 무시
             {
+                gestureManager.SetTextUnrecognizable();
                 DogAnimator.instance.animator.SetInteger("petPose", -1);
             }
 

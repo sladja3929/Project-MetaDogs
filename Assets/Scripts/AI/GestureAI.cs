@@ -16,7 +16,10 @@ public class GestureAI : Agent
     private int totalDefaultCount = 0;
     private int totalIgnoreCount = 0;
     public float CorrectAnswerRate { get; private set; } = 0f;
+
     public int Decision { get; set; } = -1;
+
+    public bool IsStart { get; set; } = false;
 
     public override void Initialize()
     {
@@ -25,6 +28,7 @@ public class GestureAI : Agent
     // Branch 0 size = 3
     public override void OnActionReceived(ActionBuffers actions)
     {
+        if (!IsStart) return;
         int resultDogGesture = actions.DiscreteActions[0];
 
         if (resultDogGesture == 0)  // 정답 행동
@@ -32,7 +36,7 @@ public class GestureAI : Agent
             ++correctCount;
             AddReward(1f);
 
-            if (correctCount >= 20)
+            if (correctCount >= 3)
             {
                 AddReward(10f);
                 ++totalCorrectCount;
@@ -46,7 +50,7 @@ public class GestureAI : Agent
             ++defaultCount;
             AddReward(-0.95f);
 
-            if (defaultCount >= 20)
+            if (defaultCount >= 3)
             {
                 AddReward(-10f);
                 ++totalDefaultCount;
@@ -60,7 +64,7 @@ public class GestureAI : Agent
             ++ignoreCount;
             AddReward(-1f);
 
-            if (ignoreCount >= 20)
+            if (ignoreCount >= 3)
             {
                 AddReward(-10f);
                 ++totalIgnoreCount;
