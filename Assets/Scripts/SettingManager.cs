@@ -39,6 +39,10 @@ public class SettingManager : MonoBehaviour
     {   //펫 선택 모드로
         SceneManager.LoadScene("PetSelect");
     }
+    public void Save()
+    {   //수동 세이브 클릭
+
+    }
 
     public void ExitGame()
     {   //종료

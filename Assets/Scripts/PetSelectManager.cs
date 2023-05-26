@@ -36,6 +36,8 @@ public class PetSelectManager : MonoBehaviour
     public AudioSource audioSource; //πË∞Ê¿Ω
     
 
+
+
     private void Awake()
     {
         instance = this;
@@ -104,9 +106,15 @@ public class PetSelectManager : MonoBehaviour
 
             yield return null;
         }
-        DontDestroyOnLoad(gameObject);
-        yield return new WaitForSeconds(1);
-        SceneManager.LoadScene("CutScene");
+        //DontDestroyOnLoad(gameObject);
+        //yield return new WaitForSeconds(1);
+        //SceneManager.LoadScene("CutScene");
+        ToIngameScene();
+    }
+
+    public void ToIngameScene()
+    {
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void DestroyThis()

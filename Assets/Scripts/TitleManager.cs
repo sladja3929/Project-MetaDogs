@@ -21,6 +21,17 @@ public class TitleManager : MonoBehaviour
 
     public void OnClickLogIn()
     {
+        /*
+         * 
+         *
+         *
+         */
+
+        ToPetSelect();
+    }
+
+    public void ToPetSelect()
+    {
         SceneManager.LoadScene("PetSelect");
     }
 }
