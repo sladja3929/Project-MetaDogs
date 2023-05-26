@@ -21,7 +21,7 @@ class Learning(Resource):
         # Get data
         data = request.get_json()
 
-        pet_token_path = f"mkdir {result_path}/{data['pet_token']}"
+        pet_token_path = f"{result_path}/{data['pet_token']}"
         old_run_id = f"{pet_token_path}/model_{data['gesture_id']}"
         new_run_id = old_run_id + "_new" #새 오닉스 파일이 저장될 폴더
         
