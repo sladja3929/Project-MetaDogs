@@ -47,13 +47,10 @@ public class DailyGesture : MonoBehaviour
             // param.Model = 
 
             ai.Decision = -1;
-            int count = 0;
             while (ai.Decision == -1)
             {
                 ai.RequestDecision();
                 yield return Time.fixedDeltaTime;
-                ++count;
-                if (count > 100) break;
             }
 
             Debug.Log(ai.Decision);

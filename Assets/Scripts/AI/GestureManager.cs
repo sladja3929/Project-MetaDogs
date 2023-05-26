@@ -24,15 +24,18 @@ public class GestureManager : MonoBehaviour
         Validating,
     }
 
+    [Header("GUID 참조")]
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private GameObject gestureChangePanel;
     [SerializeField] private Transform target;
-    [SerializeField] private float errorRatePerCount = 3750f;
+
+    [Header("제스처 인식 설정")]
+    [SerializeField] [Range(25f, 180f)] private float dirErrorAngle = 45f;
+    [SerializeField] [Range(0f, 45f)] private float penaltyAngle = 15f;
     [SerializeField] [Range(0f, 1f)] private float curveDelay = 0.15f;
-    [SerializeField] [Range(100f, 10000f)] private float countPenalty = 3000f;
+    [SerializeField] [Range(0.1f, 20f)] private float shakingCorrectionAngle = 10f;
 
     private Dictionary<BehaviorType, List<Vector3>> dataSet;
-    private float errorRate = 0f;
     private bool isObserving = false;
     private bool isStopped = false;
     private bool isWorking = false;
@@ -161,8 +164,6 @@ public class GestureManager : MonoBehaviour
                     isWorking = false;
                     isAllowedChangingGesture = 0;
                     text.SetText($"해당 제스처는 이미 {item.Key}가 사용중입니다!");
-                    //text.text = "해당 제스처는 이미 " + item.Key.ToString() + "가 사용중입니다!";
-                    Debug.Log("나와!!!");
                     yield return new WaitForSeconds(1f);
 
                     StartSensing(givenBehavior);
@@ -210,7 +211,6 @@ public class GestureManager : MonoBehaviour
         // Set long & short vector
         List<Vector3> longVec = curGesture;
         List<Vector3> shortVec = dataSet[type];
-        errorRate = shortVec.Count * errorRatePerCount;
 
         if (longVec.Count < shortVec.Count)
         {
@@ -219,47 +219,44 @@ public class GestureManager : MonoBehaviour
         }
 
         // Check Error
-        float dirError = 0f;
+        float gestureError = 0f;
         int shortIdx = 0;
         for (int longIdx = 0; longIdx < longVec.Count; ++longIdx)
         {
-            // Cosine similarity를 이용해 MSE 계산
-            float curError = Mathf.Pow(Vector3.Angle(longVec[longIdx], shortVec[shortIdx]), 2);
+            // Cosine similarity
+            float curError = Mathf.Abs(Vector3.Angle(longVec[longIdx], shortVec[shortIdx]));
             if (shortIdx + 1 < shortVec.Count)
             {
-                float nextError = Mathf.Pow(Vector3.Angle(longVec[longIdx], shortVec[shortIdx + 1]), 2);
+                float nextError = Mathf.Abs(Vector3.Angle(longVec[longIdx], shortVec[shortIdx + 1]));
                 if (curError < nextError)
                 {
-                    dirError += curError;
+                    gestureError += curError;
                 }
                 else
                 {
-                    dirError += nextError;
+                    gestureError += nextError;
                     ++shortIdx;
                 }
             }
             else
             {
-                dirError += curError;
+                gestureError += curError;
             }
         }
+
+        int totalCount = longVec.Count;
 
         // Penalty
         for (; shortIdx < shortVec.Count; ++shortIdx)
         {
-            dirError += countPenalty;
+            gestureError += penaltyAngle;
+            ++totalCount;
         }
 
-        Debug.Log(type.ToString() + " | " + "목표 에러: " + errorRate + " | 에러율: " + dirError);
+        gestureError /= totalCount;
 
-        if (dirError > errorRate)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        Debug.Log($"행동: {type} | {gestureError} / {dirErrorAngle}");
+        return gestureError < dirErrorAngle;
     }
 
 
@@ -283,7 +280,7 @@ public class GestureManager : MonoBehaviour
 
         isStopped = false;
 
-        // 초기에 0.1 이상 움직여야 인식 시작
+        // 초기에 약간 움직여야 인식 시작
         do
         {
             yield return observeDelay;
@@ -302,13 +299,14 @@ public class GestureManager : MonoBehaviour
             yield return observeDelay;
             endPos = target.localPosition;
             Vector3 diff = endPos - startPos;
-            if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 15f)
+
+            // 떨림 보정 10도
+            if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 10f)
             {
-                // 곡선 구간 무시
                 yield return curveDelay;
                 endPos = target.localPosition;
                 diff = endPos - startPos;
-                if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 15f)
+                if (Mathf.Abs(Vector3.Angle(prevVec, diff)) > 10f)
                 {
                     newList.Add(diff);
                     prevVec = diff;
@@ -320,7 +318,6 @@ public class GestureManager : MonoBehaviour
             }
             startPos = endPos;
         }
-        errorRate = newList.Count * errorRatePerCount;
         isObserving = false;
     }
 
