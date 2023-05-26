@@ -19,7 +19,7 @@ behaviors:
       extrinsic:
         gamma: 0.99      # Smaller, narrower prediction [0.8, 0.995]
         strength: 1.0   # factor to multiply the reward (actual_reward = reward * strength)
-    keep_checkpoints: 5
-    max_steps: 2000     # Maximum step to learn
+    keep_checkpoints: 1
+    max_steps: 6400     # Maximum step to learn
     time_horizon: 32    # Number of experiences the Agent will collect before saving to the experience buffer [32, 2048]
-    summary_freq: 500   # Number of times output to the console
+    summary_freq: 800   # Number of times output to the console

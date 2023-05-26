@@ -87,12 +87,4 @@ public class GestureAI : Agent
         defaultCount = 0;
         ignoreCount = 0;
     }
-
-    private void OnDestroy()
-    {
-        Debug.Log(CorrectAnswerRate);
-        Debug.Log("정답: " + totalCorrectCount);
-        Debug.Log("기본: " + totalDefaultCount);
-        Debug.Log("무시: " + totalIgnoreCount);
-    }
 }
