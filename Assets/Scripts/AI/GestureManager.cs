@@ -82,7 +82,11 @@ public class GestureManager : MonoBehaviour
         CurrentBehaviorType = BehaviorType.Undecided;
         mode = ManagerMode.Validating;
     }
-
+    
+    public void SetTextUnrecognizable()
+    {
+        text.SetText("강아지가 이해하지 못한 것 같아요.");
+    }
 
     void Update()
     {
