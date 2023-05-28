@@ -26,6 +26,8 @@ public class NftManager : MonoBehaviour
 
     public bool autoToy;
 
+    public int weather;
+
     private void Awake()
     {
         instance = this;
@@ -62,5 +64,7 @@ public class NftManager : MonoBehaviour
 
         if (autoToy)
             SpawnManager.instance.autoToy.SetActive(true);
+
+        WeatherManager.instance.ChangeWeather(weather);
     }
 }
