@@ -206,4 +206,31 @@ public class RequestManager : Singleton<RequestManager>
             www.Dispose();
         }
     }
+
+    public IEnumerator LoadMLAgent(int gesture_id)
+    {
+        string url = "http://203.250.148.33:20443/mlagent/learning"; // Replace with your API endpoint
+        string json = $"{{\"pet_token\": \"{NftManager.instance.selected.pet_token}\", \"gestrue_id\": \"{gesture_id}\"}}";
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url, json))
+        {
+            byte[] jsonBytes = new System.Text.UTF8Encoding().GetBytes(json);
+            www.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.downloadHandler = new DownloadHandlerFile(Application.streamingAssetsPath + @"\model_" + gesture_id + ".onnx");
+
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error: " + www.error);
+            }
+            else
+            {
+
+            }
+
+            www.Dispose();
+        }
+    }
 }

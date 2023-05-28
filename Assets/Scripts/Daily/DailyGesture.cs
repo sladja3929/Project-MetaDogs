@@ -46,14 +46,13 @@ public class DailyGesture : MonoBehaviour
                 continue;
             }
 
-            RequestManager.Instance.StartCoroutine("LoadAIModel", (int)behavior);
+            //db에서 모델 가져오기
+            yield return RequestManager.Instance.StartCoroutine("LoadAIModel", (int)behavior);
 
             var ONNXPath = Application.streamingAssetsPath + @"\model_" + (int)behavior + ".onnx";
-            var converter = new ONNXModelConverter(optimizeModel: true); // requires the Unity.Barracuda.ONNX assembly
-
-            // Read file at path and convert to byte array
-            byte[] modelData = File.ReadAllBytes(ONNXPath);
-            var model = converter.Convert(modelData); // type is Unity.Barracuda.Model
+            // 서버에서 해당 행동에 대한 .onnx파일을 가져와야 함.
+            var curModel = LoadNNModel(ONNXPath, "AITest");
+            ai.SetModel("AITest", curModel);
 
             ai.Decision = -1;
             ai.IsStart = true;
@@ -84,5 +83,26 @@ public class DailyGesture : MonoBehaviour
             yield return new WaitForSeconds(3f);
             DogAnimator.instance.animator.SetTrigger("loopEnd");
         }
+    }
+
+    private NNModel LoadNNModel(string modelPath, string modelName)
+    {
+        ONNXModelConverter converter = new(true);
+        Model model = converter.Convert(modelPath);
+
+        NNModelData modelData = ScriptableObject.CreateInstance<NNModelData>();
+        using (var memoryStream = new MemoryStream())
+        using (var writer = new BinaryWriter(memoryStream))
+        {
+            ModelWriter.Save(writer, model);
+            modelData.Value = memoryStream.ToArray();
+        }
+        modelData.name = "Data";
+        modelData.hideFlags = HideFlags.HideInHierarchy;
+
+        NNModel result = ScriptableObject.CreateInstance<NNModel>();
+        result.modelData = modelData;
+        result.name = modelName;
+        return result;
     }
 }

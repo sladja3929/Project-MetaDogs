@@ -38,6 +38,7 @@ public class GestureManager : MonoBehaviour
     private bool isObserving = false;
     private bool isStopped = false;
     private bool isWorking = false;
+    private bool isTraining = false;
 
     private int isAllowedChangingGesture = 0;
     private BehaviorType givenBehavior;
@@ -53,6 +54,13 @@ public class GestureManager : MonoBehaviour
     private void UpdateData()
     {
         SaveDataManager.Instance.SaveTrainingData(dataSet);
+    }
+
+    private IEnumerator TrainingCoroutine(BehaviorType type)
+    {
+        isTraining = true;
+        yield return RequestManager.Instance.StartCoroutine("LoadMLAgnet", (int)type);
+        isTraining = false;
     }
 
 
@@ -129,6 +137,7 @@ public class GestureManager : MonoBehaviour
             // 기존 제스처와 일치하면 학습 완료
             if (IsMatched(inputGesture, type) < 1f)
             {
+                StartCoroutine("TrainingCoroutine", type);
                 TrainManager.instance.RecordFin(true, false);
             }
             // 다른 제스처 감지 시
@@ -151,6 +160,7 @@ public class GestureManager : MonoBehaviour
                         isAllowedChangingGesture = 0;
                         dataSet[type] = inputGesture;
                         UpdateData();
+                        StartCoroutine("TrainingCoroutine", type);
                         TrainManager.instance.RecordFin(true, true);
                     }
                     // 제스처 변경을 하지 않았을 때, 현재 입력 무시
@@ -184,6 +194,7 @@ public class GestureManager : MonoBehaviour
             {
                 dataSet[type] = inputGesture;
                 UpdateData();
+                StartCoroutine("TrainingCoroutine", type);
                 TrainManager.instance.RecordFin(true, true);
             }
             //  다른 행동이 해당 제스처를 쓰고 있다면 무시
