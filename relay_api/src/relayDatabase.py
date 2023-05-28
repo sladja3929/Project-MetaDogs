@@ -77,7 +77,7 @@ class Load_Pet_Property(Resource):
         if row is None:
             return "no data"
 
-        return row
+        return jsonify(row)
     
 @RelayDatabase.route('/load_pet_texture')
 class Load_Pet_Texture(Resource):
@@ -170,7 +170,7 @@ class Save_AI_Model(Resource):
 
         # Get data from request
         model = request.files['model']
-        pet_token = request.form['pet_token']
+        pet_token = request.form['pet_ztoken']
         gesture_id = request.form['gesture_id']
 
         if model:
