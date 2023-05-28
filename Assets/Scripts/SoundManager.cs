@@ -8,6 +8,7 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     public AudioSource audioSource;
     public Slider soundSlider;
+    public float soundVolume;
 
     public AudioClip[] sounds;
     void Awake()
@@ -44,5 +45,10 @@ public class SoundManager : MonoBehaviour
     {
         audioSource.clip = sounds[i];
         audioSource.Play();
+    }
+    public void InitVolume()
+    {
+        audioSource.volume = soundVolume;
+        soundSlider.value = Mathf.Round(soundVolume * 6);
     }
 }

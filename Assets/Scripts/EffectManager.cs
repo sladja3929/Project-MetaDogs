@@ -17,7 +17,7 @@ public class EffectManager : MonoBehaviour
 
     public Slider slider;
     public Effect[] effectSounds;
-    public float volume;
+    public float effectVolume;
 
     // Start is called before the first frame update
     void Awake()
@@ -30,7 +30,7 @@ public class EffectManager : MonoBehaviour
             effectSounds[i].source = gameObject.AddComponent<AudioSource>();
             effectSounds[i].source.clip = effectSounds[i].clip;
             effectSounds[i].source.loop = false;
-            effectSounds[i].source.volume = volume;
+            //effectSounds[i].source.volume = effectVolume;
 
         }
 
@@ -42,6 +42,16 @@ public class EffectManager : MonoBehaviour
     {
 
     }
+
+    public void InitVolume()
+    {
+        for (int i = 0; i < effectSounds.Length; i++)
+        {
+            effectSounds[i].source.volume = effectVolume;
+        }
+        slider.value = Mathf.Round(effectVolume * 6);
+    }
+
     public void SetEffectVolume(Slider slider)
     {
         for (int i = 0; i < effectSounds.Length; i++)
@@ -62,4 +72,5 @@ public class EffectManager : MonoBehaviour
     {
         //effectSounds[34].source.Stop();
     }
+
 }
