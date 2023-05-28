@@ -40,7 +40,7 @@ class Load_Pet_List(Resource):
         if db.cursor.rowcount == 0:
             return -1
 
-        row.insert(0, {'isFirst':isFirst})
+        #row.insert(0, {'isFirst':isFirst})
         return jsonify(row)
 
 @RelayDatabase.route('/load_settings')
