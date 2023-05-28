@@ -70,7 +70,7 @@ public class RequestManager : Singleton<RequestManager>
             byte[] jsonBytes = new System.Text.UTF8Encoding().GetBytes(json);
             www.uploadHandler = new UploadHandlerRaw(jsonBytes);
             www.SetRequestHeader("Content-Type", "application/json");
-            Debug.Log("{\"pet_token\":\"" + NftManager.instance.petJson.nftList[index].pet_token + "\"}");
+            
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
@@ -91,7 +91,7 @@ public class RequestManager : Singleton<RequestManager>
     {
         string url = "http://203.250.148.33:20080/db/load_pet_texture"; // Replace with your API endpoint
         string json = "{\"pet_token\":\"" + NftManager.instance.petJson.nftList[index].pet_token + "\"}"; // Replace with your JSON data
-        Debug.Log("{\"pet_token\":\"" + NftManager.instance.petJson.nftList[index].pet_token + "\"}");
+        
         using (UnityWebRequest www = UnityWebRequest.Post(url, json))
         {
             byte[] jsonBytes = new System.Text.UTF8Encoding().GetBytes(json);
@@ -174,6 +174,33 @@ public class RequestManager : Singleton<RequestManager>
             else
             {
                 Debug.Log(www.downloadHandler.text);
+            }
+
+            www.Dispose();
+        }
+    }
+
+    public IEnumerator LoadAIModel(int gesture_id)
+    {
+        string url = "http://203.250.148.33:20080/db/load_ai_model"; // Replace with your API endpoint
+        string json = $"{{\"pet_token\": \"{NftManager.instance.selected.pet_token}\", \"gestrue_id\": \"{gesture_id}\"}}";
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url, json))
+        {
+            byte[] jsonBytes = new System.Text.UTF8Encoding().GetBytes(json);
+            www.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.downloadHandler = new DownloadHandlerFile(Application.streamingAssetsPath + @"\model_" + gesture_id + ".onnx");
+
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error: " + www.error);
+            }
+            else
+            {
+
             }
 
             www.Dispose();

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents.Policies;
 using UnityEngine;
+using Unity.Barracuda;
+using Unity.Barracuda.ONNX;
+using System.IO;
 
 // 느낌표 오브젝트에 부착
 public class DailyGesture : MonoBehaviour
@@ -43,7 +46,14 @@ public class DailyGesture : MonoBehaviour
                 continue;
             }
 
-            // 서버에서 해당 행동에 대한 .onnx파일을 가져와야 함.
+            RequestManager.Instance.StartCoroutine("LoadAIModel", (int)behavior);
+
+            var ONNXPath = Application.streamingAssetsPath + @"\model_" + (int)behavior + ".onnx";
+            var converter = new ONNXModelConverter(optimizeModel: true); // requires the Unity.Barracuda.ONNX assembly
+
+            // Read file at path and convert to byte array
+            byte[] modelData = File.ReadAllBytes(ONNXPath);
+            var model = converter.Convert(modelData); // type is Unity.Barracuda.Model
 
             ai.Decision = -1;
             ai.IsStart = true;
