@@ -183,7 +183,7 @@ public class RequestManager : Singleton<RequestManager>
     public IEnumerator LoadAIModel(int gesture_id)
     {
         string url = "http://203.250.148.33:20080/db/load_ai_model"; // Replace with your API endpoint
-        string json = $"{{\"pet_token\": \"{NftManager.instance.selected.pet_token}\", \"gestrue_id\": \"{gesture_id}\"}}";
+        string json = $"{{\"pet_token\": \"{NftManager.instance.selected.pet_token}\", \"gesture_id\": \"{gesture_id}\"}}";
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, json))
         {
@@ -210,7 +210,7 @@ public class RequestManager : Singleton<RequestManager>
     public IEnumerator LoadMLAgent(int gesture_id)
     {
         string url = "http://203.250.148.33:20443/mlagent/learning"; // Replace with your API endpoint
-        string json = $"{{\"pet_token\": \"{NftManager.instance.selected.pet_token}\", \"gestrue_id\": \"{gesture_id}\"}}";
+        string json = $"{{\"pet_token\": \"{NftManager.instance.selected.pet_token}\", \"gesture_id\": \"{gesture_id}\"}}";
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, json))
         {
