@@ -53,13 +53,13 @@ public class TxtSaveManager : MonoBehaviour
         }
 
         /*else
-            value = "ÆÄÀÏÀÌ ¾ø½À´Ï´Ù.";*/
+            value = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.";*/
 
         return value;
     }
     public void SetVolume(string txtString)
     {
-        string[] lines = txtString.Split('\n'); //ÁÙ´ÜÀ§·Î ¹®ÀÚ¿­ ¹è¿­·Î ÀÏ¾î¿À±â 
+        string[] lines = txtString.Split('\n'); //ï¿½Ù´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½Ï¾ï¿½ï¿½ï¿½ï¿½ 
         string[] soundWords = lines[1].Split('=');
         string[] effectWords = lines[2].Split('=');
         //Debug.Log(soundWords[1]);

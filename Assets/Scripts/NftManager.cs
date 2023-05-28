@@ -11,12 +11,24 @@ public class PetNFT
     public string pet_sex; //(f는 암컷, m은 수컷)
     //pet_color: png 파일
     public Texture pet_color;
+    public float pet_emotion;
     //model: onnx 파일
     //property: yaml 파일
 };
+
+[System.Serializable]
+public class PetJson
+{
+    public PetNFT[] nftList;
+};
+
 public class NftManager : MonoBehaviour
 {
     public static NftManager instance;
+
+    public string walletID;
+
+    public PetJson petJson;
     public PetNFT[] nftList;
     public PetNFT selected;
     public int listLen;
