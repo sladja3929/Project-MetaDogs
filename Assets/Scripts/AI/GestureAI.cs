@@ -99,4 +99,9 @@ public class GestureAI : Agent
         Debug.Log("기본: " + totalDefaultCount);
         Debug.Log("무시: " + totalIgnoreCount);
     }
+
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+    }
+
 }
