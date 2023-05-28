@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PetNFT
 {
-    public int pet_token;
+    public string pet_token;
     public string pet_name;
     public int pet_age;
     public string pet_sex; //(f는 암컷, m은 수컷)
@@ -38,8 +38,6 @@ public class NftManager : MonoBehaviour
     {
 
 
-
-
         DontDestroyOnLoad(gameObject);
     }
 
@@ -52,6 +50,13 @@ public class NftManager : MonoBehaviour
     public void DestroyThis()
     {
         Destroy(gameObject);
+    }
+    public void LoadTextures()  //펫 NFT 프로퍼티들 가져올 때 같이 호출해주세요
+    {
+        for (int i = 0; i < nftList.Length; i++)
+        {
+            nftList[i].pet_color = Resources.Load<Texture2D>(nftList[i].pet_token + "_texture");
+        }
     }
     public void NftSetting()
     {
@@ -67,4 +72,6 @@ public class NftManager : MonoBehaviour
 
         WeatherManager.instance.ChangeWeather(weather);
     }
+
+    
 }

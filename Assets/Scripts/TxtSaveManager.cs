@@ -16,7 +16,7 @@ public class TxtSaveManager : MonoBehaviour
     void Start()
     {
         //WriteTxt(Application.streamingAssetsPath + @"\save.txt");
-        SetVolume(ReadTxt(Application.streamingAssetsPath + @"\save.txt"));
+        //SetVolume(ReadTxt(Application.streamingAssetsPath + @"\save.txt"));
     }
 
     // Update is called once per frame
