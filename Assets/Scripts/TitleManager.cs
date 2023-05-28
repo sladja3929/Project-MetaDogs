@@ -143,4 +143,10 @@ public class TitleManager : MonoBehaviour
         StartCoroutine(GET());  // QR코드 생성과 동시에 코루틴을 실행하여 사용자 인증을 확인함
 
     }
+    public void OnClickDevLogin()
+    {
+        PlayerPrefs.SetInt("devLogin", 1);  //devLogin 여부에 따라 펫 선택 화면이 바뀜
+
+        SceneManager.LoadScene("PetSelect");
+    }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.101214334, g: 0.28805837, b: 0.5370623, a: 1}
+  m_IndirectSpecularColor: {r: 0.10117787, g: 0.2880348, b: 0.5371327, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5292,7 +5292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -244.8, y: 26.4}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &309457620
@@ -5315,7 +5315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 0387d872a2715714dab45e020dc7c260, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -8741,6 +8741,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f1082af1e2d939e46844bc13c4ee7754, type: 2}
+    - target: {fileID: 4489546610080404368, guid: a32793c2d7a973541a705148244340ef,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2.3767595
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489546610080404368, guid: a32793c2d7a973541a705148244340ef,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.1581372
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489546610080404368, guid: a32793c2d7a973541a705148244340ef,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 0.0011938513
+      objectReference: {fileID: 0}
     - target: {fileID: 5104633552591641090, guid: a32793c2d7a973541a705148244340ef,
         type: 3}
       propertyPath: m_RootOrder
@@ -9654,7 +9669,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1507171048}
         m_TargetAssemblyTypeName: TitleManager, Assembly-CSharp
-        m_MethodName: ToPetSelect
+        m_MethodName: OnClickDevLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12763,7 +12778,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -140.9}
+  m_AnchoredPosition: {x: 0, y: -140}
   m_SizeDelta: {x: 1206, y: 226}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1844939843
