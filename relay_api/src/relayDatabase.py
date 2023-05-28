@@ -71,7 +71,7 @@ class Load_Pet_Property(Resource):
         data = request.get_json()
 
         #db에서 가져오기
-        sql = "SELECT pet_name, pet_age, pet_sex, pet_emotion FROM nft.pet WHERE pet_token=%s"
+        sql = "SELECT pet_token, pet_name, pet_age, pet_sex, pet_emotion FROM nft.pet WHERE pet_token=%s"
         row = db.executeOne(sql, data['pet_token'])
 
         if row is None:
@@ -170,7 +170,7 @@ class Save_AI_Model(Resource):
 
         # Get data from request
         model = request.files['model']
-        pet_token = request.form['pet_ztoken']
+        pet_token = request.form['pet_token']
         gesture_id = request.form['gesture_id']
 
         if model:
