@@ -27,7 +27,7 @@ public class DogMove : MonoBehaviour
     void Update()
     {
         //qwer 위의 1, 2, 3 키보드 숫자 눌러서 각기 다른 걷기 동작으로 따라오게 하기
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        /*if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             agent.SetDestination(target.position);
             agent.speed = 1.5f;
@@ -45,7 +45,8 @@ public class DogMove : MonoBehaviour
             agent.speed = 3f;
             DogAnimator.instance.animator.SetInteger("moveSpeed", 2);
         }
-        else if (agent.remainingDistance <= agent.stoppingDistance) //가까워지면 스톱
+        else*/
+        if (agent.remainingDistance <= agent.stoppingDistance) //가까워지면 스톱
         {
             DogAnimator.instance.animator.SetInteger("moveSpeed", -1);
             //Debug.Log(0);

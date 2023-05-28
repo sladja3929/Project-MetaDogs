@@ -22,6 +22,7 @@ public class SpawnManager : MonoBehaviour
         if (GameObject.Find("NftManager"))
             NftManager.instance.NftSetting();
         PositionSetting();
+        TxtSaveManager.instance.SetVolume(TxtSaveManager.instance.ReadTxt(Application.streamingAssetsPath + @"\save.txt"));
     }
 
     // Update is called once per frame
