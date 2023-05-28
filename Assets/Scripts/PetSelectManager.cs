@@ -54,9 +54,9 @@ public class PetSelectManager : MonoBehaviour
             if (PlayerPrefs.GetInt("devLogin") == 1)
             {   
                 //개발자 로그인일 경우 샘플 NFT들을 NftManager에 저장
-                nftManager.nftList = new PetNFT[sampleNFTs.Length];
+                nftManager.petJson.nftList = new PetNFT[sampleNFTs.Length];
                 for (int i = 0; i < sampleNFTs.Length; i++)
-                    nftManager.nftList[i] = sampleNFTs[i];
+                    nftManager.petJson.nftList[i] = sampleNFTs[i];
 
                 //훈련비법서, 장난감도 모두 개방
                 nftManager.jumpScroll = true;
@@ -74,9 +74,9 @@ public class PetSelectManager : MonoBehaviour
         { 
             //개발자 로그인일 경우 샘플 NFT들을 NftManager에 저장
             PlayerPrefs.SetInt("devLogin", 1);
-            nftManager.nftList = new PetNFT[sampleNFTs.Length];
+            nftManager.petJson.nftList = new PetNFT[sampleNFTs.Length];
             for (int i = 0; i < sampleNFTs.Length; i++)
-                nftManager.nftList[i] = sampleNFTs[i];
+                nftManager.petJson.nftList[i] = sampleNFTs[i];
             
             //훈련비법서, 장난감도 모두 개방
             nftManager.jumpScroll = true;
@@ -90,7 +90,6 @@ public class PetSelectManager : MonoBehaviour
             nftUIs[1].SetActive(true);
         if (nftManager.autoToy)
             nftUIs[2].SetActive(true);
-
 
         PetChange();
     }
@@ -108,16 +107,19 @@ public class PetSelectManager : MonoBehaviour
 
     public void PetChange() //펫 텍스처 변경, 클립보드의 텍스트 변경
     {
-        corgiMesh.materials[0].SetTexture("_BaseMap", nftManager.nftList[petArrIdx].pet_color);
+        corgiMesh.materials[0].SetTexture("_BaseMap", nftManager.petJson.nftList[petArrIdx].pet_color);
 
-        boyuPet.text = "보유 펫 " + (petArrIdx + 1) + "/" + nftManager.nftList.Length;
-        nftId.text = "펫 NFT ID\n" + nftManager.nftList[petArrIdx].pet_token;
-        petName.text = "이름: " + nftManager.nftList[petArrIdx].pet_name;
-        age.text = "나이: " + nftManager.nftList[petArrIdx].pet_age + "months";
+        //Debug.Log(nftManager.petJson.nftList[petArrIdx].pet_token);
+        boyuPet.text = "보유 펫 " + (petArrIdx + 1) + "/" + nftManager.petJson.nftList.Length;
+        nftId.text = "펫 NFT ID\n" + nftManager.petJson.nftList[petArrIdx].pet_token;
+        petName.text = "이름: " + nftManager.petJson.nftList[petArrIdx].pet_name;
+        age.text = "나이: " + nftManager.petJson.nftList[petArrIdx].pet_age + "months";
+        //Debug.Log(age.text);
+        //Debug.Log(nftManager.petJson.nftList[petArrIdx].pet_age + "months");
 
-        if (nftManager.nftList[petArrIdx].pet_sex == "f")
+        if (nftManager.petJson.nftList[petArrIdx].pet_sex == "f")
             gender.text = "성별: ♀";
-        else if (nftManager.nftList[petArrIdx].pet_sex == "m")
+        else if (nftManager.petJson.nftList[petArrIdx].pet_sex == "m")
             gender.text = "성별: ♂";
         else
             gender.text = "성별: ?";
@@ -127,19 +129,19 @@ public class PetSelectManager : MonoBehaviour
     {
         petArrIdx--;
         if (petArrIdx < 0)
-            petArrIdx += nftManager.nftList.Length;
+            petArrIdx += nftManager.petJson.nftList.Length;
         PetChange();
     }
     public void NextPet()   //펫 목록 한 칸 뒤로 이동
     {
         petArrIdx++;
-        if (petArrIdx >= nftManager.nftList.Length)
-            petArrIdx -= nftManager.nftList.Length;
+        if (petArrIdx >= nftManager.petJson.nftList.Length)
+            petArrIdx -= nftManager.petJson.nftList.Length;
         PetChange();
     }
     public void OnClickPetSelect() //펫 선택
     {
-        nftManager.selected = nftManager.nftList[petArrIdx];
+        nftManager.selected = nftManager.petJson.nftList[petArrIdx];
         StartCoroutine(FadeOut());
     }
 

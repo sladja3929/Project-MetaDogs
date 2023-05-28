@@ -1,1 +1,3 @@
-asdasdsdsds
+#sound
+background=1
+effect=1

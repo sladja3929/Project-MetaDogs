@@ -114,6 +114,34 @@ public class RequestManager : Singleton<RequestManager>
         }
     }
 
+    public void StartLoadingTitleToPetSelect()
+    {
+        StartCoroutine(LoadingTitleToPetSelect());
+    }
+    public IEnumerator LoadingTitleToPetSelect()
+    {
+        StartCoroutine(LoadSettings());
+        yield return StartCoroutine(LoadPetList());
+        for (int i = 0; i < NftManager.instance.petJson.nftList.Length; i++)
+            yield return StartCoroutine(LoadPetProperty(i));
+        for (int i = 0; i < NftManager.instance.petJson.nftList.Length; i++)
+            yield return StartCoroutine(LoadPetTexture(i));
+
+        NftManager.instance.enabled = true;
+        PetSelectManager.instance.enabled = true;
+        NftManager.instance.LoadTextures();
+    }
+    public void StartLoadingToIngame()
+    {
+        StartCoroutine(LoadingToIngame());
+    }
+
+    public IEnumerator LoadingToIngame()
+    {
+        yield return StartCoroutine(LoadSettings());
+    }
+
+
     public IEnumerator SaveSettings()
     {
         string url = "http://203.250.148.33:20080/db/save_settings"; // Replace with your API endpoint

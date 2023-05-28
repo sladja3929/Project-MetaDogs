@@ -32,7 +32,7 @@ public class DogAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   //키보드 우측 키패드 숫자 눌러서 포즈 수동 실행
-        if (Input.GetKeyDown(KeyCode.Keypad0))
+        /*if (Input.GetKeyDown(KeyCode.Keypad0))
             ActPose(0);
         else if (Input.GetKeyDown(KeyCode.Keypad1))
             ActPose(1);
@@ -45,7 +45,7 @@ public class DogAnimator : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Keypad5))
             ActPose(5);
         else if (Input.GetKeyDown(KeyCode.P))   //키보드 p 누르면 수동으로 동작 그만
-            ActPose(-1);
+            ActPose(-1);*/
     }
 
     public void RandIdle()  //멈춰있을 때 4가지 제자리 동작 중 하나 랜덤 재생

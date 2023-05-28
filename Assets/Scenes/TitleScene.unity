@@ -5257,6 +5257,79 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &309457618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 309457619}
+  - component: {fileID: 309457621}
+  - component: {fileID: 309457620}
+  m_Layer: 5
+  m_Name: QR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &309457619
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309457618}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1715434995}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -244.8, y: 26.4}
+  m_SizeDelta: {x: 200, y: 200}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &309457620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309457618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 0387d872a2715714dab45e020dc7c260, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &309457621
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309457618}
+  m_CullTransparentMesh: 1
 --- !u!114 &314239167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8668,6 +8741,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f1082af1e2d939e46844bc13c4ee7754, type: 2}
+    - target: {fileID: 4489546610080404368, guid: a32793c2d7a973541a705148244340ef,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2.3767595
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489546610080404368, guid: a32793c2d7a973541a705148244340ef,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.1581372
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489546610080404368, guid: a32793c2d7a973541a705148244340ef,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 0.0011938513
+      objectReference: {fileID: 0}
     - target: {fileID: 5104633552591641090, guid: a32793c2d7a973541a705148244340ef,
         type: 3}
       propertyPath: m_RootOrder
@@ -9581,7 +9669,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1507171048}
         m_TargetAssemblyTypeName: TitleManager, Assembly-CSharp
-        m_MethodName: ToPetSelect
+        m_MethodName: OnClickDevLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10632,6 +10720,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1648974849}
   dog: {fileID: 108092818}
+  qrCodeImage: {fileID: 309457620}
+  data: https://klipwallet.com/?target=/a2a?request_key=
+  getData: https://a2a-api.klipwallet.com/v2/a2a/result?request_key=
 --- !u!4 &1507171049
 Transform:
   m_ObjectHideFlags: 0
@@ -11865,6 +11956,7 @@ RectTransform:
   - {fileID: 1993675086}
   - {fileID: 1844939842}
   - {fileID: 1266392467}
+  - {fileID: 309457619}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12686,7 +12778,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -140.9}
+  m_AnchoredPosition: {x: 0, y: -140}
   m_SizeDelta: {x: 1206, y: 226}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1844939843
