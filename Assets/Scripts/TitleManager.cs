@@ -34,7 +34,7 @@ public class TitleManager : MonoBehaviour
 
     public void OnClickDevLogin()
     {
-        PlayerPrefs.SetInt("devLogin", 1);  //devLogin 여부에 따라 펫 선택 화면이 바뀜
+        PlayerPrefs.SetInt("devLogin", 0);  //devLogin 여부에 따라 펫 선택 화면이 바뀜
 
         ToPetSelect();
     }

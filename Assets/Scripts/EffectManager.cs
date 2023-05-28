@@ -63,6 +63,20 @@ public class EffectManager : MonoBehaviour
         /*if (Time.timeScale == 0f)
             effectSounds[1].source.Play();*/
     }
+    public void SetPlus(Slider slider)
+    {
+        slider.value++;
+        effectVolume = slider.value / 6;
+        TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
+        slider.onValueChanged.Invoke(0);
+    }
+    public void SetMinus(Slider slider)
+    {
+        slider.value--;
+        effectVolume = slider.value / 6;
+        TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
+        slider.onValueChanged.Invoke(0);
+    }
 
     public void OnPointerDown(BaseEventData eventData)
     {

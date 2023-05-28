@@ -34,11 +34,15 @@ public class SoundManager : MonoBehaviour
     public void SetPlus(Slider slider)
     {
         slider.value++;
+        soundVolume = slider.value / 6;
+        TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
         slider.onValueChanged.Invoke(0);
     }
     public void SetMinus(Slider slider)
     {
         slider.value--;
+        soundVolume = slider.value / 6;
+        TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
         slider.onValueChanged.Invoke(0);
     }
     public void ChangeMusic(int i)
