@@ -10,7 +10,7 @@ public class RequestManager : Singleton<RequestManager>
     public IEnumerator LoadSettings()
     {
         string url = "http://203.250.148.33:20080/db/load_settings"; // Replace with your API endpoint        
-        string json = "{\"wallet_id\":\"" + NftManager.instance.walletID + "\"}"; // Replace with your JSON data
+        string json = "{\"wallet_id\":\"" + walletID + "\"}"; // Replace with your JSON data
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, json))
         {
@@ -37,7 +37,7 @@ public class RequestManager : Singleton<RequestManager>
     public IEnumerator LoadPetList()
     {
         string url = "http://203.250.148.33:20080/db/load_pet_list"; // Replace with your API endpoint
-        string json = "{\"wallet_id\":\"" + NftManager.instance.walletID + "\"}"; // Replace with your JSON data
+        string json = "{\"wallet_id\":\"" + walletID + "\"}"; // Replace with your JSON data
         
         using (UnityWebRequest www = UnityWebRequest.Post(url, json))
         {
@@ -152,7 +152,7 @@ public class RequestManager : Singleton<RequestManager>
         WWWForm form = new WWWForm();
 
         // Add form data
-        form.AddField("wallet_id", NftManager.instance.walletID);
+        form.AddField("wallet_id", walletID);
 
         // Add file
         byte[] fileBytes = File.ReadAllBytes(filePath);
