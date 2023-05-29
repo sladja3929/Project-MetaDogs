@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 13764
+  controlID: 28213
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
-  m_XRRenderMode: 0
+  m_XRRenderMode: -1
   m_RenderTexture: {fileID: 0}
 --- !u!114 &3
 MonoBehaviour:
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 13765
+  controlID: 28214
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 13766
+  controlID: 28215
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -228,23 +228,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: a6bc1b00
-      m_LastClickedID: 1817766
-      m_ExpandedIDs: f277f3ffa49cf3ff12dcf9ff14dcf9ff30dcf9ff3adcf9ffc6dff9ff78f7fcffa018fdff705cfdfff080fdff38a5fdffcac4fdff5ce8fdff5810feffa234feffac55feff6c9cfeffeabffeffdac1feff16edfeff6453ffffca8cffff22d3ffffe2faffffb6c200000cc600001ec80000eacb0200a8150300381b04002cc00b00dac00b0020bb1b00cabb1b00
+      m_SelectedIDs: 88c10000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 3a54e8ffdcafe8ff147ae9ffc6a9e9ff10b1e9ff14b1e9ff16b1e9ff4ab3e9ff4cb3e9ff4eb3e9ff50b3e9ff68b3e9ff72b3e9fffcb6e9ff3ec9e9ffc2cae9ffc6cae9ffd8cae9ffeecae9fff6cae9ff00cbe9ffdecbe9ffe6cbe9ff16cce9ff2ccce9ff34cce9ff3ecce9ff54cce9ff5ccce9ffb6cce9ffcccce9ffd4cce9ffdecce9ffe2cce9ff14cfe9ff28cfe9ff26d0e9ff92d1e9ff08d2e9ff0cd2e9ff3ad3e9ff42d3e9ff4cd3e9ff60d3e9ff88d3e9ff98d3e9ffa8d3e9ffb8d3e9ffc0d3e9ffc8d3e9fff2d3e9ff02d4e9ff12d4e9ff1ad4e9ff28d4e9ff40d4e9ff50d4e9ff60d4e9ff68d4e9ff76d4e9ff80d4e9ff84d4e9ffa8d5e9ffb2d5e9ffded5e9ff30d7e9ff46d7e9ff50d7e9ff54d7e9ff58d7e9ffb0d7e9ffbad7e9ffc2d7e9ff50d8e9ff76d8e9ffa4d8e9ffc0d8e9ff4ed9e9ff5ed9e9ff68d9e9ff76d9e9ff86d9e9ff90d9e9ffa0d9e9ffaad9e9ffbad9e9ffc4d9e9ffd8d9e9ffe8d9e9fff2d9e9ff02dae9ff0cdae9ff2adae9ff48dae9ff52dae9ff66dae9ff7adae9ffccdae9ffd6dae9ffdedae9fff6dae9ff08dbe9ff5cdbe9ff66dbe9ff76dbe9ff80dbe9ff90dbe9ff9adbe9ff4adce9ff62dce9ff72dce9ff7adce9ff8adce9ff92dce9ffa2dce9ffaadce9ffb2dce9ffc2dce9ffdedce9ff0edde9ff18dde9ff1cdde9ff20dde9ff24dde9ff6edde9ff52dfe9ff72e1e9ffb8e4e9ffbce4e9ffbee4e9ffd6e5e9ffdce5e9fff0e5e9fff8e5e9ff6ae6e9ff82e6e9ff86e6e9ff8ae6e9ff8ee6e9ff92e6e9ff96e6e9ff9ae6e9ff9ee6e9fff2e6e9fff4e6e9fff6e6e9fff8e6e9ff10e7e9ff1ae7e9ff06eae9ff0ceae9ff20eae9ff2aeae9ffa4eae9fff090ecffa6c4ecfface8ecff1e74eeff10c9eeffe053efffeaabefff6cceefffc0efefffdc9bf0ffec0cf1ff0c63f1fffa6df1ffc6b2f1fffe21f2fff277f3ffa49cf3ff12dcf9ff14dcf9ff30dcf9ff3adcf9ffc6dff9ff78f7fcffa018fdff705cfdfff080fdff38a5fdffcac4fdff5ce8fdff5810feffa234feffac55feff6c9cfeffeabffeffdac1feff16edfeff6453ffffca8cffff22d3ffffe2fafffff4ffffffb6c200000cc600001ec80000eacb0200a8150300381b04002cc00b00dac00b0020bb1b00cabb1b007e6d2e00966d2e0046e0340024f849004af84900bcf8490034f9490044f949006af9490080f949008cf9490094f94900a4f94900cef94900d8f9490004fa490008fa490032fa490044fa49006efa490094fa4900d0fa4900d8fa4900ecfa4900f6fa490002fb4900c0fb4900e6fb490036fc49003efc490086fc4900bafc4900d0fc4900f6fc490026fd490042fd49004afd490054fd490062fd49007efd49008afd4900a6fd4900c2fd4900cafd490000fe49000efe49001afe490022fe490036fe490094fe4900b4fe49007c4c4a005c4e4a009c6e4a00d09a4a00f69a4a00689b4a00169c4a00409c4a00509c4a007a9c4a00849c4a00b09c4a00c89c4a00de9c4a001a9d4a00409d4a00849d4a00a29d4a00929e4a00ea9e4a00329f4a007c9f4a00d29f4a00f69f4a000ea04a0076a04a00aca04a00cea04a0018a14a0040a14a0028ef4a0008f14a0048114b00
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: 
-        m_OriginalName: 
+        m_Name: Reflection Probe
+        m_OriginalName: Reflection Probe
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 0
+        m_UserData: -1450646
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 11
+        m_OriginalEventType: 0
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 5}
       m_SearchString: 
@@ -574,9 +574,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1920, y: 540, z: 0}
+    m_Target: {x: 4.224385, y: 2.5929322, z: -11.638466}
     speed: 2
-    m_Value: {x: 1920, y: 540, z: 0}
+    m_Value: {x: 4.224385, y: 2.5929322, z: -11.638466}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -618,18 +618,18 @@ MonoBehaviour:
         m_Value: 0
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0}
+      m_Size: {x: 1, y: 1}
     m_ShowGrid: 1
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.034625303, y: 0.10055513, z: -0.00351033, w: -0.9943546}
+    m_Target: {x: -0.03785571, y: -0.944404, z: 0.30492753, w: -0.11731274}
     speed: 2
-    m_Value: {x: -0.0346242, y: 0.100551926, z: -0.0035102183, w: -0.99432296}
+    m_Value: {x: -0.037854288, y: -0.94436854, z: 0.30491608, w: -0.11730833}
   m_Size:
-    m_Target: 0.82705426
+    m_Target: 82.76238
     speed: 2
-    m_Value: 0.82705426
+    m_Value: 82.76238
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -647,7 +647,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: 0, y: 0, z: 0, w: 0}
+  m_LastSceneViewRotation: {x: -0.12684575, y: -0.8630705, z: 0.4092902, w: -0.26753718}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
@@ -664,7 +664,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ConsoleWindow
+  m_Name: ProjectBrowser
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -673,14 +673,14 @@ MonoBehaviour:
     y: 642
     width: 1418
     height: 345
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 11}
+  m_MinSize: {x: 231, y: 271}
+  m_MaxSize: {x: 10001, y: 10021}
+  m_ActualView: {fileID: 10}
   m_Panes:
   - {fileID: 10}
   - {fileID: 11}
-  m_Selected: 1
-  m_LastSelected: 0
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -724,21 +724,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - "Assets/Effects/\uB0AE"
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - "Assets/Effects/\uB0AE"
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\kjunwoo23\Documents\GitHub\Project-MetaDogs
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 5a391b00
-    m_LastClickedID: 1784154
+    scrollPos: {x: 0, y: 367}
+    m_SelectedIDs: 5ac10000
+    m_LastClickedID: 49498
     m_ExpandedIDs: 000000002abe00002cbe00002ebe000030be000032be000034be000036be000038be00003abe00003cbe00003ebe000040be000042be000044be000046be000048be00004abe00004cbe00004ebe000050be000052be000054be000056be000058be00005abe00005cbe00005ebe000060be000062be000064be000066be000068be00006abe00006cbe00006ebe000070be000072be000074be000076be000078be00007abe00007cbe00007ebe000080be000082be000084be000086be000088be00008abe00008cbe00008ebe000090be000092be000094be000096be000098be00009abe00009cbe00009ebe0000a0be0000a2be0000a4be0000a6be0000a8be0000aabe0000acbe0000aebe0000b0be0000b2be0000b4be0000b6be0000b8be0000babe0000bcbe0000bebe0000c0be0000c2be0000c4be0000c6be000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -792,8 +792,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 5a391b00
-    m_LastClickedInstanceID: 1784154
+    m_SelectedInstanceIDs: 88c10000
+    m_LastClickedInstanceID: 49544
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
