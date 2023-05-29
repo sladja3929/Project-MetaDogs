@@ -30,9 +30,9 @@ class First_Login(Resource):
         
         sql = "SELECT nickname FROM user.user WHERE wallet_id=%s"
         row = db.executeOne(sql, data['wallet_id'])
-
+       
         #nft 데이터는 있지만 첫 접속일 경우
-        if row is None:
+        if row['nickname'] is None:
             file = open("save.txt", "r")
             sql = "INSERT INTO user.gamedata(wallet_id, ui_save) \
                 VALUES(%s, %s)"
