@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     {
         if (vrMode) //vrMode 켜져있을 때 메뉴창 열기
         {
-            if (OVRInput.GetDown(OVRInput.Button.Four))
+            if (OVRInput.GetDown(OVRInput.Button.Start))
                 if (canvas.gameObject.activeSelf)
                 {
                     canvas.gameObject.SetActive(false);
@@ -73,7 +73,10 @@ public class Player : MonoBehaviour
         {
             EffectManager.instance.PlayEffect(2);
             if (!ham.activeSelf)
+            {
                 ham.SetActive(true);
+                controller.SetActive(false);
+            }
             else
                 ham.SetActive(false);
         }
@@ -83,7 +86,10 @@ public class Player : MonoBehaviour
             {
                 EffectManager.instance.PlayEffect(2);
                 if (!controller.activeSelf)
+                {
                     controller.SetActive(true);
+                    ham.SetActive(false);
+                }
                 else
                     controller.SetActive(false);
             }

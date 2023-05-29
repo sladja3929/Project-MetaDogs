@@ -83,6 +83,9 @@ public class PetSelectManager : MonoBehaviour
             nftManager.attackScroll = true;
             nftManager.autoToy = true;
         }
+        nftManager.jumpScroll = true;
+        nftManager.attackScroll = true;
+        nftManager.autoToy = true;
 
         if (nftManager.attackScroll)
             nftUIs[0].SetActive(true);
