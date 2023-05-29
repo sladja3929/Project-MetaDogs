@@ -50,6 +50,10 @@ public class DailyGesture : MonoBehaviour
             yield return RequestManager.Instance.StartCoroutine("LoadAIModel", (int)behavior);
 
             var ONNXPath = Application.streamingAssetsPath + @"\model_" + (int)behavior + ".onnx";
+
+            // 파일이 존재하지 않으면 무시
+            if (!File.Exists(ONNXPath)) continue;
+
             var curModel = LoadNNModel(ONNXPath, "AITest");
             ai.SetModel("AITest", curModel);
 
