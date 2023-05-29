@@ -26,6 +26,13 @@ public class TxtSaveManager : MonoBehaviour
     }
     public void WriteTxt(string filePath)
     {
+        StreamWriter writer;
+        writer = File.CreateText((filePath));
+        writer.WriteLine("#Sound");
+        writer.WriteLine("background=" + (Mathf.Round(SoundManager.instance.soundVolume * 1000) * 0.001f));
+        writer.WriteLine("effect=" + (Mathf.Round(EffectManager.instance.effectVolume * 1000) * 0.001f));
+        writer.Close();
+        /*
         DirectoryInfo directoryInfo = new DirectoryInfo(Path.GetDirectoryName(filePath));
 
         if (!directoryInfo.Exists)
@@ -35,10 +42,16 @@ public class TxtSaveManager : MonoBehaviour
 
         FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
 
-        StreamWriter writer = new StreamWriter(fileStream, System.Text.Encoding.Unicode);
+        StreamWriter writer = new StreamWriter(fileStream);
 
-        writer.WriteLine("#Sound\n" + "background=" + SoundManager.instance.soundVolume + "\neffect=" + EffectManager.instance.effectVolume);
+        writer.WriteLine("#Sound");
+        writer.WriteLine("background=" + (Mathf.Round(SoundManager.instance.soundVolume * 1000) * 0.001f));
+        writer.WriteLine("effect=" + (Mathf.Round(EffectManager.instance.effectVolume * 1000) * 0.001f));
+        writer.Flush();
+        writer.Dispose();
         writer.Close();
+        fileStream.Close();
+        */
     }
     public string ReadTxt(string filePath)
     {

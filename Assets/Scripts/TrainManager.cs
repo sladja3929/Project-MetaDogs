@@ -32,7 +32,7 @@ public class TrainManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {/*
         if (Input.GetKeyDown(KeyCode.T))    //훈련모드 수동 전환 (권장하진 않음)
         {
             if (DogAnimator.instance.animator.GetBool("trainMode"))
@@ -43,7 +43,7 @@ public class TrainManager : MonoBehaviour
             {
                 TrainModeEnable();
             }
-        }
+        }*/
         if (Input.GetKeyDown(KeyCode.G))
             HitBoxOnOff();
     }

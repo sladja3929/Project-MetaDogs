@@ -92,6 +92,7 @@ public class PetSelectManager : MonoBehaviour
             nftUIs[2].SetActive(true);
 
         PetChange();
+        GetComponent<AudioSource>().Play();
     }
 
     // Update is called once per frame
@@ -127,6 +128,7 @@ public class PetSelectManager : MonoBehaviour
 
     public void PrevPet()   //Æê ¸ñ·Ï ÇÑ Ä­ ÀüÀ¸·Î ÀÌµ¿
     {
+        if (fades[0].transform.localScale.x != 0) return;
         petArrIdx--;
         if (petArrIdx < 0)
             petArrIdx += nftManager.petJson.nftList.Length;
@@ -134,6 +136,7 @@ public class PetSelectManager : MonoBehaviour
     }
     public void NextPet()   //Æê ¸ñ·Ï ÇÑ Ä­ µÚ·Î ÀÌµ¿
     {
+        if (fades[0].transform.localScale.x != 0) return;
         petArrIdx++;
         if (petArrIdx >= nftManager.petJson.nftList.Length)
             petArrIdx -= nftManager.petJson.nftList.Length;
@@ -141,6 +144,7 @@ public class PetSelectManager : MonoBehaviour
     }
     public void OnClickPetSelect() //Æê ¼±ÅÃ
     {
+        if (fades[0].transform.localScale.x != 0) return;
         nftManager.selected = nftManager.petJson.nftList[petArrIdx];
         StartCoroutine(FadeOut());
     }
@@ -161,7 +165,23 @@ public class PetSelectManager : MonoBehaviour
         //SceneManager.LoadScene("CutScene");
         ToIngameScene();
     }
-
+    public void StartFadeIn()
+    {
+        StartCoroutine(FadeIn());
+    }
+    public IEnumerator FadeIn()   //ÆäÀÌµåÀÎ, ¾À ÀüÈ¯
+    {
+        float tmpVol = audioSource.volume;
+        while (fades[0].transform.localScale.x > 0)
+        {
+            fades[0].transform.localScale -= new Vector3(9 * Time.deltaTime, 0, 0);
+            fades[1].transform.localScale -= new Vector3(9 * Time.deltaTime, 0, 0);
+            //audioSource.volume -= tmpVol * Time.deltaTime;
+            yield return null;
+        }
+        fades[0].transform.localScale = new Vector3(0, fades[0].transform.localScale.y, fades[0].transform.localScale.z);
+        fades[1].transform.localScale = new Vector3(0, fades[1].transform.localScale.y, fades[1].transform.localScale.z);
+    }
     public void ToIngameScene()
     {
         SceneManager.LoadScene("SampleScene");

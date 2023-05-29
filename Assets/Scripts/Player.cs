@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
+                    EffectManager.instance.PlayEffect(1);
                     //canvas.transform.SetParent(transform);
                     canvas.transform.position = canvasPos.position;
                     canvas.transform.rotation = canvasPos.rotation;
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                EffectManager.instance.PlayEffect(1);
                 //canvas.transform.SetParent(transform);
                 canvas.transform.position = canvasPos.position;
                 canvas.transform.rotation = canvasPos.rotation;
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) || OVRInput.GetDown(OVRInput.Button.Three))    //간식 키기
         {
+            EffectManager.instance.PlayEffect(2);
             if (!ham.activeSelf)
                 ham.SetActive(true);
             else
@@ -78,6 +81,7 @@ public class Player : MonoBehaviour
         if (DogMove.instance.toy.gameObject.activeSelf)
             if (Input.GetKeyDown(KeyCode.R) || OVRInput.GetDown(OVRInput.Button.Four))    //장난감 키기
             {
+                EffectManager.instance.PlayEffect(2);
                 if (!controller.activeSelf)
                     controller.SetActive(true);
                 else

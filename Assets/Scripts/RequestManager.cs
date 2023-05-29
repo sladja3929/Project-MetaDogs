@@ -130,6 +130,7 @@ public class RequestManager : Singleton<RequestManager>
         NftManager.instance.enabled = true;
         PetSelectManager.instance.enabled = true;
         NftManager.instance.LoadTextures();
+        PetSelectManager.instance.StartFadeIn();
     }
     public void StartLoadingToIngame()
     {
@@ -140,7 +141,7 @@ public class RequestManager : Singleton<RequestManager>
     {
         yield return StartCoroutine(LoadSettings());
     }
-
+    
 
     public IEnumerator SaveSettings()
     {

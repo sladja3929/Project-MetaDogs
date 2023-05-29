@@ -70,6 +70,7 @@ public class GestureManager : MonoBehaviour
         text.gameObject.SetActive(true);
         gestureChangePanel.SetActive(false);
         text.SetText("오른손 A버튼으로\n훈련 시작하기");
+        //EffectManager.instance.PlayEffect(3);
         givenBehavior = type;
         CurrentBehaviorType = type;
         mode = ManagerMode.Sensing;
@@ -85,7 +86,7 @@ public class GestureManager : MonoBehaviour
             return;
         }
         text.SetText("오른손 A버튼으로\n제스처 입력하기");
-
+        //EffectManager.instance.PlayEffect(3);
 
         CurrentBehaviorType = BehaviorType.Undecided;
         mode = ManagerMode.Validating;
@@ -94,6 +95,7 @@ public class GestureManager : MonoBehaviour
     public void SetTextUnrecognizable()
     {
         text.SetText("강아지가 이해하지 못한 것 같아요.");
+        EffectManager.instance.PlayEffect(1);
     }
 
     void Update()
@@ -106,6 +108,7 @@ public class GestureManager : MonoBehaviour
             {
                 isWorking = true;
                 StartCoroutine(AddGestureCoroutine(givenBehavior));
+                EffectManager.instance.PlayEffect(3);
             }
         }
         else if (mode == ManagerMode.Validating)
@@ -114,6 +117,7 @@ public class GestureManager : MonoBehaviour
             {
                 isWorking = true;
                 StartCoroutine(MatchGestureCoroutine());
+                EffectManager.instance.PlayEffect(3);
             }
         }
 
@@ -121,6 +125,7 @@ public class GestureManager : MonoBehaviour
         if (isObserving && OVRInput.GetDown(OVRInput.Button.Two) || Input.GetKeyDown(KeyCode.X))
         {
             isStopped = true;
+            //EffectManager.instance.PlayEffect(2);
         }
     }
 
@@ -178,6 +183,7 @@ public class GestureManager : MonoBehaviour
                     isWorking = false;
                     isAllowedChangingGesture = 0;
                     text.SetText($"해당 제스처는 {resultType}와 유사합니다!");
+                    EffectManager.instance.PlayEffect(1);
                     yield return new WaitForSeconds(2f);
 
                     StartSensing(givenBehavior);
@@ -203,6 +209,7 @@ public class GestureManager : MonoBehaviour
                 isWorking = false;
                 isAllowedChangingGesture = 0;
                 text.SetText($"해당 제스처는 {resultType}와 유사합니다!");
+                EffectManager.instance.PlayEffect(1);
                 yield return new WaitForSeconds(2f);
 
                 StartSensing(givenBehavior);
@@ -225,6 +232,7 @@ public class GestureManager : MonoBehaviour
         if (resultType == BehaviorType.Undecided)
         {
             text.SetText("일치하는 제스처가 없습니다!");
+            EffectManager.instance.PlayEffect(1);
             yield return new WaitForSeconds(1f);
             CurrentBehaviorType = BehaviorType.None;
         }
@@ -232,6 +240,7 @@ public class GestureManager : MonoBehaviour
         {
             CurrentBehaviorType = resultType;
             text.SetText($"{CurrentBehaviorType}\n가져오는 중");
+            EffectManager.instance.PlayEffect(0);
             mode = ManagerMode.None;
         }
         isWorking = false;
@@ -317,6 +326,7 @@ public class GestureManager : MonoBehaviour
     private void ObserveGesture(out List<Vector3> newList)
     {
         text.SetText("제스처 감지중...\n오른손 A버튼으로 중지하기");
+        EffectManager.instance.PlayEffect(3);
         newList = new();
         isObserving = true;
         StartCoroutine(ObserveGestureCoroutine(newList));
@@ -342,6 +352,7 @@ public class GestureManager : MonoBehaviour
             if (isStopped)
             {
                 text.SetText("제스처가 너무 작습니다!\n더 움직여주세요.");
+                EffectManager.instance.PlayEffect(1);
             }
         } while (prevVec.magnitude < 0.1f);
         startPos = endPos;

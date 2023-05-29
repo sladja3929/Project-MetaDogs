@@ -30,6 +30,8 @@ public class EffectManager : MonoBehaviour
             effectSounds[i].source = gameObject.AddComponent<AudioSource>();
             effectSounds[i].source.clip = effectSounds[i].clip;
             effectSounds[i].source.loop = false;
+            if (i > 4)
+                effectSounds[i].source.loop = true;
             //effectSounds[i].source.volume = effectVolume;
 
         }
@@ -48,6 +50,8 @@ public class EffectManager : MonoBehaviour
         for (int i = 0; i < effectSounds.Length; i++)
         {
             effectSounds[i].source.volume = effectVolume;
+            //if (i > 4)
+            effectSounds[i].source.volume = effectVolume * 0.5f;
         }
         slider.value = Mathf.Round(effectVolume * 6);
     }
@@ -56,9 +60,10 @@ public class EffectManager : MonoBehaviour
     {
         for (int i = 0; i < effectSounds.Length; i++)
         {
-            float value = Mathf.Round(slider.value * 100) * 0.01f;
-            effectSounds[i].source.volume = value;
-            
+            effectSounds[i].source.volume = slider.value / 6;
+            //if (i > 4)
+            effectSounds[i].source.volume = effectVolume * 0.5f;
+            //
         }
         /*if (Time.timeScale == 0f)
             effectSounds[1].source.Play();*/
@@ -76,6 +81,19 @@ public class EffectManager : MonoBehaviour
         effectVolume = slider.value / 6;
         TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
         slider.onValueChanged.Invoke(0);
+    }
+
+    public void StopAll()
+    {
+        for (int i = 4; i < effectSounds.Length; i++)
+        {
+            effectSounds[i].source.Stop();
+        }
+    }
+
+    public void PlayEffect(int i)
+    {
+        effectSounds[i].source.Play();
     }
 
     public void OnPointerDown(BaseEventData eventData)

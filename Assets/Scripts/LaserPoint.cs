@@ -54,6 +54,7 @@ public class LaserPoint : MonoBehaviour
                 // 오큘러스 고 리모콘에 큰 동그라미 부분을 누를 경우
                 if (OVRInput.GetDown(OVRInput.Button.One) || Input.GetKeyDown(KeyCode.Mouse0))
                 {
+                    EffectManager.instance.PlayEffect(2);
                     // 버튼에 등록된 onClick 메소드를 실행한다.
                     Collided_object.collider.gameObject.GetComponent<Button>().onClick.Invoke();
                 }
@@ -95,12 +96,14 @@ public class LaserPoint : MonoBehaviour
         if (OVRInput.GetDown(OVRInput.Button.One) || Input.GetKeyDown(KeyCode.Mouse0))
         {
             laser.material.color = new Color(1, 0, 0, 0.5f);
+            //EffectManager.instance.PlayEffect(2);
         }
 
         // 버튼을 뗄 경우          
         else if (OVRInput.GetUp(OVRInput.Button.One) || Input.GetKeyUp(KeyCode.Mouse0))
         {
             laser.material.color = new Color(1, 1, 0.5f, 0.5f);
+            //EffectManager.instance.PlayEffect(2);
         }
     }
 

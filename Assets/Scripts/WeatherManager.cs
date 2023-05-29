@@ -43,18 +43,30 @@ public class WeatherManager : MonoBehaviour
     public void ChangeWeather(int i)
     {
         RenderSettings.skybox = skyboxes[i];
-        if (i == 1) rain.SetActive(true);
+        if (i == 1)
+        {
+            rain.SetActive(true);
+            EffectManager.instance.StopAll();
+            EffectManager.instance.effectSounds[13].source.Play();
+        }
         else rain.SetActive(false);
 
         if (i == 2)
         {
             sunLight.SetActive(false);
             RenderSettings.fog = false;
+            EffectManager.instance.StopAll();
+            EffectManager.instance.effectSounds[UnityEngine.Random.Range(10, 13)].source.Play();
         }
         else
         {
             sunLight.SetActive(true);
             RenderSettings.fog = true;
+            if (!rain.activeSelf)
+            {
+                EffectManager.instance.StopAll();
+                EffectManager.instance.effectSounds[UnityEngine.Random.Range(4, 10)].source.Play();
+            }
         }
         SoundManager.instance.ChangeMusic(i);
     }
