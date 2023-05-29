@@ -40,6 +40,13 @@ class First_Login(Resource):
             db.commit()
             file.close()
 
+            #임시 닉네임 추가
+            sql = "UPDATE user.user \
+                SET nickname='tmp' \
+                WHERE wallet_id=%s"
+            db.execute(sql, (data['wallet_id']))
+            db.commit()
+
             return "write nickname"
         
         return jsonify(row)
