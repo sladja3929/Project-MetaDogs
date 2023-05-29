@@ -51,10 +51,7 @@ class Pet_Sync_DB(Resource):
             db = Database()
             #메타랜드 컬렉션에 속한 토큰만 추출
             for item in data['items']:
-                if item['contractAddress'] == contract_address:
-                    
-                    #tmp nickname
-                    nickname = "tmpName"
+                if item['contractAddress'] == contract_address:        
 
                     #pet property 추출
                     pet_name = "tmpName"
@@ -63,10 +60,10 @@ class Pet_Sync_DB(Resource):
                     pet_emotion = "1.1"
 
                     #db user.user에 항목 추가
-                    sql = "INSERT INTO user.user(wallet_id, nickname) SELECT %s, %s \
+                    sql = "INSERT INTO user.user(wallet_id) SELECT %s \
                         FROM DUAL WHERE NOT EXISTS \
-                        (SELECT wallet_id, nickname FROM user.user WHERE wallet_id=%s AND nickname=%s)"
-                    db.execute(sql, (item['lastTransfer']['transferFrom'], nickname, item['lastTransfer']['transferFrom'], nickname))
+                        (SELECT wallet_id FROM user.user WHERE wallet_id=%s)"
+                    db.execute(sql, (item['lastTransfer']['transferFrom'], item['lastTransfer']['transferFrom']))
                     db.commit()
 
                     #db nft.pet에 항목 추가

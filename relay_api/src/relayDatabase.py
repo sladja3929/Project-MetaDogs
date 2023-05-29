@@ -14,23 +14,44 @@ RelayDatabase = Namespace(
     description="데이터베이스 중계 api",
 )
 
+@RelayDatabase.route('/login')
+class First_Login(Resource):
+    def post(self):
+        db = Database()
+        #get JSON data
+        data = request.get_json()
+
+        sql = "SELECT wallet_id FROM user.user WHERE wallet_id=%s"
+        row = db.executeOne(sql, data['wallet_id'])
+
+        #nft 데이터가 없을 경우
+        if row is None:
+            return "no nft data"
+        
+        sql = "SELECT nickname FROM user.user WHERE wallet_id=%s"
+        row = db.executeOne(sql, data['wallet_id'])
+
+        #nft 데이터는 있지만 첫 접속일 경우
+        if row is None:
+            file = open("save.txt", "r")
+            sql = "INSERT INTO user.gamedata(wallet_id, ui_save) \
+                VALUES(%s, %s)"
+            db.execute(sql, (data['wallet_id'], file.read()))
+            db.commit()
+            file.close()
+
+            return "write nickname"
+        
+        return jsonify(row)
+
+
+
 @RelayDatabase.route('/load_pet_list')
 class Load_Pet_List(Resource):
     def post(self):
-        isFirst = 0
         db = Database()
         # Get JSON data from request
-        data = request.get_json()
-
-        sql = "SELECT wallet_id, nickname FROM user.user WHERE wallet_id=%s"
-        row = db.executeOne(sql, data['wallet_id'])
-        
-        #user db에 지갑 주소가 없을 경우 (첫 접속)
-        if row is None:
-            isFirst = 1
-            sql = "INSERT INTO user.user(wallet_id, nickname) values(%s ,'a')"
-            db.execute(sql, data['wallet_id'])
-            db.commit()
+        data = request.get_json()        
 
         #지갑 주소로 펫 NFT 목록 가져옴
         sql = "SELECT pet_token FROM nft.pet WHERE wallet_id=%s"
@@ -40,7 +61,6 @@ class Load_Pet_List(Resource):
         if db.cursor.rowcount == 0:
             return -1
 
-        #row.insert(0, {'isFirst':isFirst})
         return jsonify(row)
 
 @RelayDatabase.route('/load_settings')
