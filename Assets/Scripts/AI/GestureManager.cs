@@ -98,6 +98,26 @@ public class GestureManager : MonoBehaviour
         EffectManager.instance.PlayEffect(1);
     }
 
+    public void DetectCorrection()
+    {
+        text.SetText($"{CurrentBehaviorType}\n가져오는 중");
+        EffectManager.instance.PlayEffect(0);
+    }
+
+    // 이게 뭐더라..? 언제 봤는데..
+    public void DetectStupid()
+    {
+        text.SetText("익숙하지 않은 동작 같아요.");
+        EffectManager.instance.PlayEffect(1);
+    }
+
+    // 이게 뭐여
+    public void DetectDisregard()
+    {
+        text.SetText("낯선 동작 같아요.");
+        EffectManager.instance.PlayEffect(1);
+    }
+
     void Update()
     {
         if (mode == ManagerMode.None) return;
@@ -239,8 +259,6 @@ public class GestureManager : MonoBehaviour
         else
         {
             CurrentBehaviorType = resultType;
-            text.SetText($"{CurrentBehaviorType}\n가져오는 중");
-            EffectManager.instance.PlayEffect(0);
             mode = ManagerMode.None;
         }
         isWorking = false;

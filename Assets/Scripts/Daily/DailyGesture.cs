@@ -70,16 +70,19 @@ public class DailyGesture : MonoBehaviour
             if (ai.Decision == 0)   // 정답
             {
                 DogAnimator.instance.animator.SetInteger("petPose", (int)behavior);
+                gestureManager.DetectCorrection();
                 Debug.Log(behavior.ToString());
             }
             else if (ai.Decision == 1)  // 기본 행동 (갸우뚱?)
             {
                 gestureManager.SetTextUnrecognizable();
+                gestureManager.DetectStupid();
                 DogAnimator.instance.animator.SetInteger("petPose", -1);
             }
             else // 무시
             {
                 gestureManager.SetTextUnrecognizable();
+                gestureManager.DetectDisregard();
                 DogAnimator.instance.animator.SetInteger("petPose", -1);
             }
 
