@@ -128,13 +128,12 @@ class Load_AI_Model(Resource):
 @RelayDatabase.route('/save_settings')
 class Save_Settings(Resource):
     def post(self):
-        db = Database()
-
         # Get data from request
         savedata = request.files['savedata']
         wallet_id = request.form['wallet_id']
             
         if savedata:
+            db = Database()
             sql = "UPDATE user.gamedata SET ui_save=%s WHERE wallet_id=%s" 
             row = db.execute(sql, (savedata.read(), wallet_id))
             db.commit()
@@ -144,8 +143,6 @@ class Save_Settings(Resource):
 @RelayDatabase.route('/save_pet_property')
 class Save_Pet_Property(Resource):
     def post(self):
-        db = Database()
-
         # Get data from request
         pet_token = request.form['pet_token']
         pet_name = request.form['pet_name']
@@ -155,6 +152,7 @@ class Save_Pet_Property(Resource):
         pet_texture = request.files['pet_texture']
             
         if pet_texture:
+            db = Database()
             sql = "UPDATE nft.pet \
                 SET pet_name=%s, pet_age=%s, pet_sex=%s, pet_emotion=%s, pet_texture=%s \
                 WHERE pet_token=%s" 
@@ -166,14 +164,13 @@ class Save_Pet_Property(Resource):
 @RelayDatabase.route('/save_ai_model')
 class Save_AI_Model(Resource):
     def post(self):
-        db = Database()
-
         # Get data from request
         model = request.files['model']
         pet_token = request.form['pet_token']
         gesture_id = request.form['gesture_id']
 
         if model:
+            db = Database()
             sql = f"UPDATE log.aimodel SET model_{gesture_id}"
             sql += "=%s WHERE pet_token=%s" 
             row = db.execute(sql, (model.read(), pet_token))
