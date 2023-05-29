@@ -20,12 +20,19 @@ public class TitleManager : MonoBehaviour
     public string data = "https://klipwallet.com/?target=/a2a?request_key=";
     public string getData = "https://a2a-api.klipwallet.com/v2/a2a/result?request_key=";
 
+    [System.Serializable]
     public class Status
     {
         public string request_key;
-        public string result;
+        //public Dictionary<string, string> result;
+        public getWalletId result;
         public string status;
         public string expiration_time;
+    }
+    [System.Serializable]
+    public class getWalletId
+    {
+        public string wId;
     }
 
     // Start is called before the first frame update
@@ -97,12 +104,21 @@ public class TitleManager : MonoBehaviour
     private IEnumerator GET()  // 사용자가 인증을 했는지 확인하는 것을 GET통신으로 구현
     {
         string result;
+        string[] response;
         UnityWebRequest www = UnityWebRequest.Get(getData);
         yield return www.SendWebRequest();
         result = www.downloadHandler.text;
         Debug.Log(result);
         Status convertJson = JsonUtility.FromJson<Status>(result);  // 결과값(string)을 json 형태로 변환
         Debug.Log(convertJson.status);
+        response = result.Split("\"");
+
+        for (int i = 0; i < response.Length; i++)
+        {
+            Debug.Log(response[i]);
+        }
+
+        //getWalletId response = JsonUtility.FromJson<getWalletId>()
 
         if (convertJson.status == "prepared")   // 사용자가 인증을 하지 않으면 계속 prepared 상태의 값이 돌아옴
         {
@@ -112,6 +128,8 @@ public class TitleManager : MonoBehaviour
         else
         {
             Debug.Log("Completed");  // 사용자 인증이 완료되면 완료 로그 출력
+            Debug.Log(response[9]);
+            //NftManager.instance.walletID = response[9];
             StartCoroutine(POSTdb());
 
             // 이후에 NFT 강아지 선택 씬으로 이동하는 코드 작성 예정.
