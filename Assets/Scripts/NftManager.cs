@@ -49,7 +49,7 @@ public class NftManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        walletID = RequestManager.Instance.walletID;
 
         DontDestroyOnLoad(gameObject);
     }
