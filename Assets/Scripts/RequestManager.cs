@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 
 public class RequestManager : Singleton<RequestManager>
 {
+    public string walletID;
     public IEnumerator LoadSettings()
     {
         string url = "http://203.250.148.33:20080/db/load_settings"; // Replace with your API endpoint        

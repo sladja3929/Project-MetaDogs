@@ -129,7 +129,7 @@ public class TitleManager : MonoBehaviour
         {
             Debug.Log("Completed");  // 사용자 인증이 완료되면 완료 로그 출력
             Debug.Log(response[9]);
-            //NftManager.instance.walletID = response[9];
+            RequestManager.Instance.walletID = response[9];
             StartCoroutine(POSTdb());
 
             // 이후에 NFT 강아지 선택 씬으로 이동하는 코드 작성 예정.
