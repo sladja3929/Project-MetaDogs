@@ -36,7 +36,7 @@ public class GestureAI : Agent
             ++correctCount;
             AddReward(1f);
 
-            if (correctCount >= 3)
+            if (correctCount >= 20)
             {
                 AddReward(10f);
                 ++totalCorrectCount;
@@ -50,7 +50,7 @@ public class GestureAI : Agent
             ++defaultCount;
             AddReward(-0.95f);
 
-            if (defaultCount >= 3)
+            if (defaultCount >= 20)
             {
                 AddReward(-10f);
                 ++totalDefaultCount;
@@ -64,7 +64,7 @@ public class GestureAI : Agent
             ++ignoreCount;
             AddReward(-1f);
 
-            if (ignoreCount >= 3)
+            if (ignoreCount >= 20)
             {
                 AddReward(-10f);
                 ++totalIgnoreCount;
