@@ -115,8 +115,8 @@ namespace OVRTouchSample
         {
             if (Input.GetKeyDown(KeyCode.C))
                 ResetHandKeyboard();
-            if (Input.GetKeyDown(KeyCode.V))
-                ResetHandVR();
+            /*if (Input.GetKeyDown(KeyCode.V))
+                ResetHandVR();*/
             if (Input.GetKeyDown(KeyCode.Tab))
                 if (isMyTurn) isMyTurn = false;
                 else isMyTurn = true;

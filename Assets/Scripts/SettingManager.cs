@@ -21,9 +21,18 @@ public class SettingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.V))
+            ConvertVrMode();        
     }
 
+    public void ConvertVrMode()
+    {
+        if (PlayerPrefs.GetInt("vrMode") == 1)
+            PlayerPrefs.SetInt("vrMode", 0);
+        else
+            PlayerPrefs.SetInt("vrMode", 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     public void ToDailyMode()
     {   //훈련모드로
         if (saveCor != null) return;
@@ -53,12 +62,13 @@ public class SettingManager : MonoBehaviour
 
     public void ExitGame()
     {   //종료
-        if (saveCor != null) return;
+        saveCor = StartCoroutine(ExitCor());
+        /*if (saveCor != null) return;
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit(); // 어플리케이션 종료
-#endif
+#endif*/
     }
     public IEnumerator ExitCor()
     {
@@ -71,7 +81,7 @@ public class SettingManager : MonoBehaviour
     }
     public IEnumerator SaveData()
     {
-        Debug.Log(1);
+        //Debug.Log(1);
         yield return StartCoroutine(RequestManager.Instance.SavePetProperty());
         yield return StartCoroutine(RequestManager.Instance.SaveSettings());
         saveCor = null;

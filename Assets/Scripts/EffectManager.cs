@@ -70,6 +70,7 @@ public class EffectManager : MonoBehaviour
     }
     public void SetPlus(Slider slider)
     {
+        if (SettingManager.instance.saveCor == null) return;
         slider.value++;
         effectVolume = slider.value / 6;
         TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
@@ -77,6 +78,7 @@ public class EffectManager : MonoBehaviour
     }
     public void SetMinus(Slider slider)
     {
+        if (SettingManager.instance.saveCor == null) return;
         slider.value--;
         effectVolume = slider.value / 6;
         TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");

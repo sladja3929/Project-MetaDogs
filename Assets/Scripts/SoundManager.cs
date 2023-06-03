@@ -33,6 +33,7 @@ public class SoundManager : MonoBehaviour
     }
     public void SetPlus(Slider slider)
     {
+        if (SettingManager.instance.saveCor == null) return;
         slider.value++;
         soundVolume = slider.value / 6;
         TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
@@ -40,6 +41,7 @@ public class SoundManager : MonoBehaviour
     }
     public void SetMinus(Slider slider)
     {
+        if (SettingManager.instance.saveCor == null) return;
         slider.value--;
         soundVolume = slider.value / 6;
         TxtSaveManager.instance.WriteTxt(Application.streamingAssetsPath + @"\save.txt");
