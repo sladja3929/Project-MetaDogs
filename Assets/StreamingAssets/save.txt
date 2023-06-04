@@ -1,0 +1,3 @@
+#Sound
+background=0.5
+effect=0.5
