@@ -1,0 +1,25 @@
+behaviors:
+  AITest:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 128     # GD iter (discrete:[32, 512], continuous:[512, 5120])
+      buffer_size: 4096  # Number of experiences collected before updating the policy (batch x ~40)
+      learning_rate: 0.0003 # Lower value when reward is not constantly increasing [0.0001, 0.001]
+      beta: 0.002   # Entropy value to randomize the policy [0.0001, 0.01]
+      epsilon: 0.2  # How fast a policy evolves. Smaller, more reliable and slower
+      lambd: 0.95   # Bigger (Value Estimation < Actual Reward) [0.9, 0.95]
+      num_epoch: 3  # How many times to train on the experience buffer. Smaller, more reliable and slower [3, 10]
+      learning_rate_schedule: linear  # linear or Constant
+    network_settings:
+      normalize: true   # Whether to normalize VectorSensor values
+      hidden_units: 32  # The number of units in the hidden layer [32, 512]
+      num_layers: 2     # The number of hidden layers [1, 3]
+      vis_encode_type: simple   # smaller: Match3, Resnet. bigger: Nature_cnn, Fully_connected
+    reward_signals:
+      extrinsic:
+        gamma: 0.99      # Smaller, narrower prediction [0.8, 0.995]
+        strength: 1.0   # factor to multiply the reward (actual_reward = reward * strength)
+    keep_checkpoints: 1
+    max_steps: 6400     # Maximum step to learn
+    time_horizon: 32    # Number of experiences the Agent will collect before saving to the experience buffer [32, 2048]
+    summary_freq: 800   # Number of times output to the console
